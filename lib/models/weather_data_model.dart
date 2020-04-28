@@ -1,19 +1,19 @@
 class WeatherData {
-  final String time;
+  final String time; //time of measurement
 
-  final String name;
-  final String description;
-  final double value;
-  final String level;
-  final String advice;
-  final String color;
+  final String name; //name of the index (CAQI or PIJP)
+  final String description; // translated text of the description of the index level
+  final double value; // numerical value of the calculated index
+  final String level; // level of the index
+  final String advice; 
+  final String color; // color representing index level
 
   final double pm1;
   final double pm25;
   final double pm10;
-  final double pressure;
-  final double humidity;
-  final double temperature;
+  final int pressure;
+  final int humidity;
+  final int temperature;
 
   WeatherData({
     this.name,
@@ -42,9 +42,9 @@ class WeatherData {
       pm1: json['current']['values'][0]["value"],
       pm25: json['current']['values'][1]["value"],
       pm10: json['current']['values'][2]["value"],
-      pressure: json['current']['values'][3]["value"],
-      humidity: json['current']['values'][4]["value"],
-      temperature: json['current']['values'][5]["value"],
+      pressure: json['current']['values'][3]["value"].round(),
+      humidity: json['current']['values'][4]["value"].round(),
+      temperature: json['current']['values'][5]["value"].round(),
       time: json['current']['tillDateTime'],
     );
   }
