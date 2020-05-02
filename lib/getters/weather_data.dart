@@ -1,4 +1,5 @@
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/models/weather_data_model.dart';
 import 'dart:convert';
 import 'package:location/location.dart';
@@ -25,9 +26,23 @@ Future<WeatherData> getWeatherData() async {
       throw Exception("We're fucked upopp");
     }
   }
-
+// Future<Widget> isLogged() async {
+//   SharedPreferences prefs = await SharedPreferences.getInstance();
+//   String result = prefs.getString('apiKey');
+//   if(result != null && result != ''){
+//     return MainScreen();
+//     // return false;
+//   }else{
+//     return GetApiKey();
+//     // return true;
+//   }
+// }
   _locationData = await location.getLocation();
-  final String _apikey = "Eo8uP8XylsMsqt6VBwtM6deKaWRkPi7g";
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String _result = prefs.getString('apiKey');
+  
+  // final String _apikey = "Eo8uP8XylsMsqt6VBwtM6deKaWRkPi7g";
+  final String _apikey = _result;
   final String lat = _locationData.latitude.toString();
   final String lng = _locationData.longitude.toString();
 

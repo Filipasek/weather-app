@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:weather/screens/station_picker_screen.dart';
+import 'package:weather/screens/get_api_key.dart';
 
 class SettingsScreen extends StatefulWidget {
   @override
@@ -28,12 +28,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => StationPicker()),
+                    MaterialPageRoute(builder: (_) => GetApiKey()),
                   );
                 },
                 color: Color.fromRGBO(0, 191, 166, 1),
                 child: Text(
-                  "Zmień domyślną stację",
+                  "Zmień klucz API",
                   style: GoogleFonts.comfortaa(
                     fontSize: 20.0,
                     color: Colors.white,
