@@ -43,7 +43,7 @@ Future getWeatherData() async {
   String _result = prefs.getString('apiKey');
 
   // final String _apikey = "Eo8uP8XylsMsqt6VBwtM6deKaWRkPi7g";
-  final String _apikey = _result;
+  final String _apikey = _result.trim();
   final String lat = _locationData.latitude.toString();
   final String lng = _locationData.longitude.toString();
 

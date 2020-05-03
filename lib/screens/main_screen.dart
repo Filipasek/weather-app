@@ -224,6 +224,23 @@ class _MainScreenState extends State<MainScreen> {
         } else {
           return Scaffold(
             backgroundColor: Theme.of(context).primaryColor,
+            appBar: AppBar(
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.settings),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => SettingsScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+              centerTitle: true,
+              elevation: 0,
+            ),
             body: Center(
                 child: CircularProgressIndicator(
               valueColor:
