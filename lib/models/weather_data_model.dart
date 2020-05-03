@@ -2,10 +2,11 @@ class WeatherData {
   final String time; //time of measurement
 
   final String name; //name of the index (CAQI or PIJP)
-  final String description; // translated text of the description of the index level
+  final String
+      description; // translated text of the description of the index level
   final double value; // numerical value of the calculated index
   final String level; // level of the index
-  final String advice; 
+  final String advice;
   final String color; // color representing index level
 
   final double pm1;
@@ -14,6 +15,9 @@ class WeatherData {
   final int pressure;
   final int humidity;
   final int temperature;
+
+  final String requestsLeft; //left requests per day
+  final String requestsPerDay; //number of requests available per day
 
   WeatherData({
     this.name,
@@ -29,9 +33,12 @@ class WeatherData {
     this.humidity,
     this.temperature,
     this.time,
+    this.requestsLeft,
+    this.requestsPerDay,
   });
 
-  factory WeatherData.fromJson(Map<String, dynamic> json) {
+  factory WeatherData.fromJson(
+      Map<String, dynamic> json, Map<String, String> headers) {
     return WeatherData(
       name: json['current']['indexes'][0]["name"],
       description: json['current']['indexes'][0]["description"],
@@ -46,6 +53,8 @@ class WeatherData {
       humidity: json['current']['values'][4]["value"].round(),
       temperature: json['current']['values'][5]["value"].round(),
       time: json['current']['tillDateTime'],
+      requestsLeft: headers['x-ratelimit-remaining-day'],
+      requestsPerDay: headers['x-ratelimit-limit-day'],
     );
   }
 }

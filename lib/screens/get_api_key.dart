@@ -45,6 +45,7 @@ class _GetApiKeyState extends State<GetApiKey> {
         }
       },
       child: Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
         body: Align(
           alignment: Alignment.bottomCenter,
           child: SingleChildScrollView(
@@ -129,7 +130,7 @@ class _GetApiKeyState extends State<GetApiKey> {
                       },
                       color: Color.fromRGBO(0, 191, 166, 1),
                       child: Text(
-                        "Zapisz klucz i zaloguj się",
+                        "Zapisz klucz",
                         style: GoogleFonts.comfortaa(
                           fontSize: 20.0,
                           color: Colors.white,

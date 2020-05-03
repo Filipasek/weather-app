@@ -55,7 +55,12 @@ class _MainScreenState extends State<MainScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => SettingsScreen()),
+                      MaterialPageRoute(
+                        builder: (_) => SettingsScreen(
+                          requestsLeft: snapshot.data.requestsLeft,
+                          totalRequests: snapshot.data.requestsPerDay,
+                        ),
+                      ),
                     );
                   },
                 ),
@@ -158,6 +163,7 @@ class _MainScreenState extends State<MainScreen> {
           );
         } else {
           return Scaffold(
+            backgroundColor: Theme.of(context).primaryColor,
             body: Center(
                 child: CircularProgressIndicator(
               valueColor:
