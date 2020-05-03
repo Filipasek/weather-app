@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:weather/screens/get_api_key.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -22,7 +21,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
-        
         centerTitle: true,
         title: requests != null && total != null
             ? Container(
@@ -43,6 +41,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(50.0),
+              child: Image.asset('assets/credentials/airly.png'),
+            ),
             // Container(
             //   margin: EdgeInsets.only(bottom: 20.0),
             //   height: 50.0,
