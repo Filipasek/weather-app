@@ -120,7 +120,7 @@ class _GetApiKeyState extends State<GetApiKey> {
                       onPressed: () {
                         if (_formKey.currentState.validate()) {
                           _formKey.currentState.save();
-                          _saveApiKey(_apiKey);
+                          _saveApiKey(_apiKey.trim());
                           Navigator.push(
                             context,
                             MaterialPageRoute(builder: (_) => MyApp()),
