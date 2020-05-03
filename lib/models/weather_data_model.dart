@@ -19,6 +19,8 @@ class WeatherData {
   final String requestsLeft; //left requests per day
   final String requestsPerDay; //number of requests available per day
 
+  final int statusCode;
+
   WeatherData({
     this.name,
     this.description,
@@ -35,10 +37,11 @@ class WeatherData {
     this.time,
     this.requestsLeft,
     this.requestsPerDay,
+    this.statusCode,
   });
 
   factory WeatherData.fromJson(
-      Map<String, dynamic> json, Map<String, String> headers) {
+      Map<String, dynamic> json, Map<String, String> headers, int statusCode) {
     return WeatherData(
       name: json['current']['indexes'][0]["name"],
       description: json['current']['indexes'][0]["description"],
@@ -55,6 +58,7 @@ class WeatherData {
       time: json['current']['tillDateTime'],
       requestsLeft: headers['x-ratelimit-remaining-day'],
       requestsPerDay: headers['x-ratelimit-limit-day'],
+      statusCode: statusCode,
     );
   }
 }

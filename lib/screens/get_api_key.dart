@@ -60,16 +60,16 @@ class _GetApiKeyState extends State<GetApiKey> {
                     child: Text(
                       "Witaj!",
                       textAlign: TextAlign.left,
-                      style: GoogleFonts.comfortaa(
+                      style: TextStyle(
                         fontSize: 60.0,
                         color: Theme.of(context).textTheme.headline.color,
                       ),
                     ),
                   ),
                   Text(
-                    'Aby móc korzystać z tej aplikacji, musisz się zalogować.\n\nBy to zrobić, wejdź na stronę developer.airly.eu/login klikając w przycisk "Przejdź do logowania".\n\nPo zalogowaniu poszukaj poszukaj napisu na ciemnym tle "Twój klucz API" bądź "Your API Key". Kliknij w niego, aby odsłonić klucz, który następnie skopiuj i wklej w tej aplikacji.',
+                    'Aby móc korzystać z tej aplikacji, musisz się zalogować.\n\nBy to zrobić, wejdź na stronę developer.airly.eu/login klikając w przycisk "Przejdź do logowania".\n\nPo zalogowaniu poszukaj napisu na ciemnym tle "Twój klucz API" bądź "Your API Key". Kliknij w niego, aby odsłonić klucz, który następnie skopiuj i wklej w tej aplikacji.',
                     textAlign: TextAlign.justify,
-                    style: GoogleFonts.comfortaa(
+                    style: TextStyle(
                       fontSize: 15.0,
                     ),
                   ),
@@ -85,7 +85,7 @@ class _GetApiKeyState extends State<GetApiKey> {
                       color: Theme.of(context).accentColor,
                       child: Text(
                         "Przejdź do logowania",
-                        style: GoogleFonts.comfortaa(
+                        style: TextStyle(
                           fontSize: 20.0,
                           color: Colors.white,
                         ),
@@ -131,7 +131,7 @@ class _GetApiKeyState extends State<GetApiKey> {
                       color: Color.fromRGBO(0, 191, 166, 1),
                       child: Text(
                         "Zapisz klucz",
-                        style: GoogleFonts.comfortaa(
+                        style: TextStyle(
                           fontSize: 20.0,
                           color: Colors.white,
                         ),
