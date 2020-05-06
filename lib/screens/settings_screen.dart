@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:weather/screens/get_api_key.dart';
+import 'package:weather/screens/select_custom_station.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String requestsLeft;
@@ -45,27 +46,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: EdgeInsets.all(50.0),
               child: Image.asset('assets/credentials/airly.png'),
             ),
-            // Container(
-            //   margin: EdgeInsets.only(bottom: 20.0),
-            //   height: 50.0,
-            //   width: double.infinity,
-            //   child: RaisedButton(
-            //     onPressed: () {
-            //       Navigator.push(
-            //         context,
-            //         MaterialPageRoute(builder: (_) => GetApiKey()),
-            //       );
-            //     },
-            //     color: Color.fromRGBO(0, 191, 166, 1),
-            //     child: Text(
-            //       "Zmień lokalizację",
-            //       style: TextStyle(
-            //         fontSize: 20.0,
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20.0),
+              height: 50.0,
+              width: double.infinity,
+              child: RaisedButton(
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => PickStation()),
+                  );
+                },
+                color: Color.fromRGBO(0, 191, 166, 1),
+                child: Text(
+                  "Zmień stację",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
             Container(
               margin: EdgeInsets.only(bottom: 50.0),
               height: 50.0,

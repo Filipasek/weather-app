@@ -19,20 +19,11 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: Colors.white,
-    //     statusBarIconBrightness: Brightness.dark,
-    //     systemNavigationBarColor: Colors.white,
-    //     systemNavigationBarIconBrightness: Brightness.dark,
-    //   ),
-    // );
     return FutureBuilder(
       future: weatherData,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.statusCode == 200) {
-            // int temp = snapshot.data.temperature;
             String stime = snapshot.data.time;
             String hour = (int.parse(stime.substring(
                         stime.indexOf("T") + 1, stime.indexOf("T") + 3)) +
@@ -47,6 +38,21 @@ class _MainScreenState extends State<MainScreen> {
             return Scaffold(
               backgroundColor: Theme.of(context).primaryColor,
               appBar: AppBar(
+                leading: IconButton(
+                  icon: Icon(Icons.refresh),
+                  onPressed: () {
+                    // setState(() {
+                    // weatherData = getWeatherData();
+
+                    // });
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => MainScreen(),
+                      ),
+                    );
+                  },
+                ),
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.settings),
@@ -106,7 +112,8 @@ class _MainScreenState extends State<MainScreen> {
                           Text(
                             temptext,
                             style: TextStyle(
-                              color: Theme.of(context).textTheme.headline5.color,
+                              color:
+                                  Theme.of(context).textTheme.headline5.color,
                               fontSize: 80.0,
                               fontWeight: FontWeight.w300,
                             ),
