@@ -1,4 +1,4 @@
-package com.example.weather
+package pl.filipguzdek.pogoda
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

@@ -21,14 +21,14 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Theme.of(context).primaryColor,
-        systemNavigationBarIconBrightness: Brightness.dark,
-      ),
-    );
+    // SystemChrome.setSystemUIOverlayStyle(
+    //   SystemUiOverlayStyle(
+    //     statusBarColor: Colors.white,
+    //     statusBarIconBrightness: Brightness.dark,
+    //     systemNavigationBarColor: Colors.white,
+    //     systemNavigationBarIconBrightness: Brightness.dark,
+    //   ),
+    // );
     return FutureBuilder(
       future: weatherData,
       builder: (context, snapshot) {
@@ -107,7 +107,7 @@ class _MainScreenState extends State<MainScreen> {
                           ),
                           Text(
                             temptext,
-                            style: GoogleFonts.quicksand(
+                            style: TextStyle(
                               color: Theme.of(context).textTheme.headline.color,
                               fontSize: 80.0,
                               fontWeight: FontWeight.w300,
