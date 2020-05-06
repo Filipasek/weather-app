@@ -29,7 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   "Pozostałe zapytania: $requests/$total",
                   style: TextStyle(
                     fontSize: 14.0,
-                    color: Theme.of(context).textTheme.body1.color,
+                    color: Theme.of(context).textTheme.bodyText2.color,
                   ),
                 ),
               )

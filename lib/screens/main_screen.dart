@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:weather/getters/weather_data.dart';
 import 'package:weather/screens/settings_screen.dart';
 
@@ -71,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
                   'Dane z $time',
                   style: TextStyle(
                     fontSize: 12.0,
-                    color: Theme.of(context).textTheme.body1.color,
+                    color: Theme.of(context).textTheme.bodyText2.color,
                   ),
                 ),
               ),
@@ -92,7 +90,7 @@ class _MainScreenState extends State<MainScreen> {
                               style: TextStyle(
                                 fontSize: 20.0,
                                 color:
-                                    Theme.of(context).textTheme.headline.color,
+                                    Theme.of(context).textTheme.headline5.color,
                               ),
                             ),
                           ),
@@ -108,7 +106,7 @@ class _MainScreenState extends State<MainScreen> {
                           Text(
                             temptext,
                             style: TextStyle(
-                              color: Theme.of(context).textTheme.headline.color,
+                              color: Theme.of(context).textTheme.headline5.color,
                               fontSize: 80.0,
                               fontWeight: FontWeight.w300,
                             ),
@@ -187,7 +185,7 @@ class _MainScreenState extends State<MainScreen> {
                 //   'Dane z $time',
                 //   style: TextStyle(
                 //     fontSize: 12.0,
-                //     color: Theme.of(context).textTheme.body1.color,
+                //     color: Theme.of(context).textTheme.bodyText2.color,
                 //   ),
                 // ),
               ),

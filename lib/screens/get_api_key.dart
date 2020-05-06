@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:weather/main.dart';
@@ -61,7 +60,7 @@ class _GetApiKeyState extends State<GetApiKey> {
                       textAlign: TextAlign.left,
                       style: TextStyle(
                         fontSize: 60.0,
-                        color: Theme.of(context).textTheme.headline.color,
+                        color: Theme.of(context).textTheme.headline5.color,
                       ),
                     ),
                   ),

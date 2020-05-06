@@ -25,8 +25,8 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.white,
         accentColor: Color.fromRGBO(255, 182, 185, 1),
         textTheme: TextTheme(
-          body1: TextStyle(color: Colors.grey),
-          headline: TextStyle(color: Colors.black),
+          bodyText2: TextStyle(color: Colors.grey),
+          headline5: TextStyle(color: Colors.black),
 
         ),
       ),
