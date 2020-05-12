@@ -113,7 +113,7 @@ class _PickStationState extends State<PickStation> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor,
                       padding: EdgeInsets.all(5.0),
                       onPressed: selected != stationId
                           ? () async {
@@ -168,7 +168,7 @@ class _PickStationState extends State<PickStation> {
                       valueIndicatorShape: PaddleSliderValueIndicatorShape(),
                       valueIndicatorColor: Colors.redAccent,
                       valueIndicatorTextStyle: TextStyle(
-                        color: Colors.white,
+                        color: Theme.of(context).primaryColor,
                       ),
                     ),
                     child: Slider(
