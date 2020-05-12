@@ -63,8 +63,11 @@ class _PickStationState extends State<PickStation> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
+
               itemCount: snapshot.data.stations.length + 1,
+              
               itemBuilder: (context, index) {
+                
                 if (index == 0) {
                   return Container(
                     margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
@@ -93,12 +96,14 @@ class _PickStationState extends State<PickStation> {
                   );
                 } else {
                   int i = index - 1;
+                  String distance = snapshot.data.stations[i].howFar ?? '';
+
                   String stationId =
                       snapshot.data.stations[i].stationId.toString();
 
                   String city = snapshot.data.stations[i].address1 ?? '';
                   String address = snapshot.data.stations[i].address2 ?? '';
-                  address = address != '' ? ', ' + address : '';
+                  address = address != '' ? ', ' + address : ''; //TODO
                   return Container(
                     margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                     height: 60.0,
@@ -118,8 +123,12 @@ class _PickStationState extends State<PickStation> {
                               });
                             }
                           : null,
-                      child: Center(
-                        child: Text("$city$address"),
+                      child: Column(
+                        children: <Widget>[
+                          Text("$city$address"),
+                          SizedBox(height: 5.0),
+                          Text("$distance od Ciebie"),
+                        ],
                       ),
                     ),
                   );
@@ -127,9 +136,6 @@ class _PickStationState extends State<PickStation> {
               },
             );
           } else {
-            // return Center(
-            //   child: CircularProgressIndicator(),
-            // );
             return Container(
               margin: EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 10.0),
               child: Column(

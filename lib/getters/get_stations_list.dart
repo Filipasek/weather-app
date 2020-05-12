@@ -1,3 +1,4 @@
+import 'package:geodesy/geodesy.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -33,6 +34,7 @@ Future<StationList> getStationsList({int distance, int number}) async {
   final String _apikey = _result.trim().replaceAll(new RegExp('[^\u0001-\u007F]'),'');
   final String lat = _locationData.latitude.toString();
   final String lng = _locationData.longitude.toString();
+  final LatLng _currentLocation = LatLng(_locationData.latitude, _locationData.longitude);
 
   final String urlReq =
       'https://airapi.airly.eu/v2/installations/nearest?lat=$lat&lng=$lng&maxDistanceKM=$distance&maxResults=$number';
@@ -45,7 +47,7 @@ Future<StationList> getStationsList({int distance, int number}) async {
   if (response.statusCode == 200) {
     // WeatherData weatherData = new WeatherData.fromJson(
     //     json.decode(response.body), response.headers, response.statusCode);
-    StationList stationList = new StationList.fromJson(json.decode(response.body));
+    StationList stationList = new StationList.fromJson(json.decode(response.body), _currentLocation);
     return stationList;
   } else {
     // ErrorData errorData = new ErrorData.fromJson(json.decode(response.body), response.statusCode);
