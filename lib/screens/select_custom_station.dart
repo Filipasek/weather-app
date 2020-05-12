@@ -63,11 +63,8 @@ class _PickStationState extends State<PickStation> {
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
             return ListView.builder(
-
               itemCount: snapshot.data.stations.length + 1,
-              
               itemBuilder: (context, index) {
-                
                 if (index == 0) {
                   return Container(
                     margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
@@ -75,10 +72,11 @@ class _PickStationState extends State<PickStation> {
                     child: RaisedButton(
                       disabledColor: Theme.of(context).accentColor,
                       disabledTextColor: Colors.black,
+                      textColor: Theme.of(context).textTheme.headline5.color,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor,
                       padding: EdgeInsets.all(5.0),
                       onPressed: () async {
                         await _removePickedStation();
@@ -86,11 +84,8 @@ class _PickStationState extends State<PickStation> {
                           selected = null;
                         });
                       },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Przywróć domyślne"),
-                        ],
+                      child: Center(
+                        child: Text("Przywróć domyślne"),
                       ),
                     ),
                   );
@@ -110,6 +105,7 @@ class _PickStationState extends State<PickStation> {
                     child: RaisedButton(
                       disabledColor: Theme.of(context).accentColor,
                       disabledTextColor: Colors.black,
+                      textColor: Theme.of(context).textTheme.headline5.color,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15.0),
                       ),
@@ -124,6 +120,7 @@ class _PickStationState extends State<PickStation> {
                             }
                           : null,
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text("$city$address"),
                           SizedBox(height: 5.0),
@@ -168,7 +165,7 @@ class _PickStationState extends State<PickStation> {
                       valueIndicatorShape: PaddleSliderValueIndicatorShape(),
                       valueIndicatorColor: Colors.redAccent,
                       valueIndicatorTextStyle: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                        color: Colors.white,
                       ),
                     ),
                     child: Slider(

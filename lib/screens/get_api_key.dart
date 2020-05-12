@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -9,7 +10,7 @@ class GetApiKey extends StatefulWidget {
 }
 
 _launchURL() async {
-  const url = 'https://developer.airly.eu/login';
+  const url = 'https://developer.airly.eu/docs';
   if (await canLaunch(url)) {
     await launch(url);
   } else {
@@ -27,14 +28,6 @@ class _GetApiKeyState extends State<GetApiKey> {
   String _apiKey;
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(
-    //   SystemUiOverlayStyle(
-    //     statusBarColor: Colors.white,
-    //     statusBarIconBrightness: Brightness.dark,
-    //     systemNavigationBarColor: Colors.white,
-    //     systemNavigationBarIconBrightness: Brightness.dark,
-    //   ),
-    // );
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -64,11 +57,41 @@ class _GetApiKeyState extends State<GetApiKey> {
                       ),
                     ),
                   ),
-                  Text(
-                    'Aby móc korzystać z tej aplikacji, musisz się zalogować.\n\nBy to zrobić, wejdź na stronę developer.airly.eu/docs klikając w przycisk "Przejdź do logowania" poniżej.\n\nZaloguj się, a następnie poszukaj napisu na ciemnym tle "Twój klucz API" bądź "Your API Key". Kliknij w niego, aby odsłonić klucz, który następnie skopiuj i wklej w tej aplikacji.',
+                  // Text(
+                  //   'Aby móc korzystać z tej aplikacji, musisz się zalogować.\n\nBy to zrobić, wejdź na stronę developer.airly.eu/docs klikając w przycisk "Przejdź do logowania" poniżej.\n\nZaloguj się, a następnie poszukaj napisu na ciemnym tle "Twój klucz API" bądź "Your API Key". Kliknij w niego, aby odsłonić klucz, który następnie skopiuj i wklej w tej aplikacji.',
+                  //   textAlign: TextAlign.justify,
+                  //   style: TextStyle(
+                  //     fontSize: 15.0,
+                  //   ),
+                  // ),
+                  RichText(
                     textAlign: TextAlign.justify,
-                    style: TextStyle(
-                      fontSize: 15.0,
+                    
+                    text: TextSpan(
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontFamily: 'Comfortaa',
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(
+                          text:
+                              'Aby móc korzystać z tej aplikacji, musisz się zalogować.\n\nBy to zrobić, wejdź na stronę ',
+                        ),
+                        TextSpan(
+                          style: TextStyle(
+                            decorationColor: Colors.blue,
+                            decoration: TextDecoration.underline,
+                            decorationStyle: TextDecorationStyle.wavy,
+                            color: Colors.blue,
+                          ),
+                          recognizer: TapGestureRecognizer()..onTap = _launchURL,
+                          text: 'developer.airly.eu/docs',
+                        ),
+                        TextSpan(
+                          text:
+                              ' klikając w przycisk "Przejdź do logowania" poniżej.\n\nZaloguj się, a następnie poszukaj napisu na ciemnym tle "Twój klucz API" bądź "Your API Key". Kliknij w niego, aby odsłonić klucz, który następnie skopiuj i wklej w tej aplikacji.',
+                        )
+                      ],
                     ),
                   ),
                   Container(
@@ -101,7 +124,18 @@ class _GetApiKeyState extends State<GetApiKey> {
                         child: TextFormField(
                           showCursor: false,
                           decoration: InputDecoration(
+                            labelStyle: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline5.color,
+                            ),
                             labelText: "Wprowadź klucz",
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color:
+                                    Theme.of(context).textTheme.headline5.color,
+                                width: 2.0,
+                              ),
+                            ),
                             border: OutlineInputBorder(),
                           ),
                           validator: (input) => input.length < 5

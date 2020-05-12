@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:weather/getters/weather_data.dart';
 import 'package:weather/screens/settings_screen.dart';
 
@@ -178,6 +177,7 @@ class _MainScreenState extends State<MainScreen> {
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.settings),
+                    color: Theme.of(context).textTheme.headline5.color,
                     onPressed: () {
                       Navigator.push(
                         context,
