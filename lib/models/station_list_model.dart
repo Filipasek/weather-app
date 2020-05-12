@@ -44,7 +44,7 @@ class Station {
       distance = dist.round().toString();
       unit = "m";
     } else if (dist < 10000) {
-      distance = (dist * 10).round().toString();
+      distance = (((dist / 100).round()) / 10).toString();
     } else {
       distance = (dist / 1000).round().toString();
     }

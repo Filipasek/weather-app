@@ -45,7 +45,7 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
+        statusBarColor: Theme.of(context).primaryColor,
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Theme.of(context).primaryColor,
         systemNavigationBarIconBrightness: Brightness.dark,
