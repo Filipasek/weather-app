@@ -52,8 +52,18 @@ Future getWeatherData() async {
     'Accept-Language': 'pl',
   });
   if (response.statusCode == 200) {
+    Map<String, dynamic> decodedResponse = json.decode(response.body);
+
+    if (decodedResponse['current']['indexes'][0]['value'] == null &&
+        decodedResponse['current']['indexes'][0]['level'] == 'UNKNOWN') {
+      ErrorData errorData = new ErrorData(
+          statusCode: 4040,
+          errorMessage: "W Twojej okolicy nie ma jeszcze naszych sensorów. Wejdź w ustawienia i wybierz jeden z dostępnych niedaleko Ciebie.");
+      return errorData;
+    }
+
     WeatherData weatherData = new WeatherData.fromJson(
-        json.decode(response.body), response.headers, response.statusCode);
+        decodedResponse, response.headers, response.statusCode);
     return weatherData;
   } else {
     ErrorData errorData =

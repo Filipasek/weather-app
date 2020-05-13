@@ -190,13 +190,6 @@ class _MainScreenState extends State<MainScreen> {
                 ],
                 centerTitle: true,
                 elevation: 0,
-                // title: Text(
-                //   'Dane z $time',
-                //   style: TextStyle(
-                //     fontSize: 12.0,
-                //     color: Theme.of(context).textTheme.bodyText2.color,
-                //   ),
-                // ),
               ),
               backgroundColor: Theme.of(context).primaryColor,
               body: Container(
@@ -206,7 +199,13 @@ class _MainScreenState extends State<MainScreen> {
                   children: <Widget>[
                     Container(
                       alignment: Alignment.centerLeft,
-                      child: Text("Wystąpił błąd!\n"),
+                      child: Text(
+                        "Wystąpił błąd!\n",
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.headline5.color,
+                          fontSize: 20.0,
+                        ),
+                      ),
                     ),
                     Container(
                       alignment: Alignment.centerLeft,

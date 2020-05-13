@@ -69,6 +69,7 @@ class _GetApiKeyState extends State<GetApiKey> {
                     
                     text: TextSpan(
                       style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyText2.color,
                         fontSize: 15.0,
                         fontFamily: 'Comfortaa',
                       ),
