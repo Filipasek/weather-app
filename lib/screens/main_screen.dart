@@ -6,7 +6,13 @@ class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
 }
-
+class MyBehavior extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
+}
 class _MainScreenState extends State<MainScreen> {
   Future weatherData;
   @override
@@ -38,21 +44,6 @@ class _MainScreenState extends State<MainScreen> {
             return Scaffold(
               backgroundColor: Theme.of(context).primaryColor,
               appBar: AppBar(
-                leading: IconButton(
-                  icon: Icon(Icons.refresh),
-                  onPressed: () {
-                    // setState(() {
-                    // weatherData = getWeatherData();
-
-                    // });
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => MainScreen(),
-                      ),
-                    );
-                  },
-                ),
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.settings),
@@ -79,93 +70,124 @@ class _MainScreenState extends State<MainScreen> {
                   ),
                 ),
               ),
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    SizedBox(),
-                    Padding(
-                      padding:
-                          const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                      child: Column(
-                        children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(bottom: 10.0),
-                            child: Text(
-                              snapshot.data.description,
-                              style: TextStyle(
-                                fontSize: 20.0,
-                                color:
-                                    Theme.of(context).textTheme.headline5.color,
+              body: LayoutBuilder(
+                builder: (context, constraints) => RefreshIndicator(
+                  color: Colors.white,
+                  backgroundColor: Theme.of(context).accentColor,
+                  onRefresh: () async {
+                    setState(() {
+                      weatherData = getWeatherData();
+                    });
+                    return weatherData;
+                  },
+                  child: ScrollConfiguration(
+                    behavior: MyBehavior(),
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Container(
+                        height: constraints.maxHeight,
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              SizedBox(),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    20.0, 10.0, 20.0, 10.0),
+                                child: Column(
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.only(bottom: 10.0),
+                                      child: Text(
+                                        snapshot.data.description,
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .headline5
+                                              .color,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.only(bottom: 20.0),
+                                      child: Text(
+                                        snapshot.data.advice,
+                                        style: TextStyle(
+                                          fontSize: 15.0,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      temptext,
+                                      style: TextStyle(
+                                        fontFamily: 'quicksand',
+                                        color: Theme.of(context)
+                                            .textTheme
+                                            .headline5
+                                            .color,
+                                        fontSize: 80.0,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 20.0),
-                            child: Text(
-                              snapshot.data.advice,
-                              style: TextStyle(
-                                fontSize: 15.0,
+                              Container(
+                                alignment: Alignment.bottomCenter,
+                                height: 50.0,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: 5,
+                                  itemBuilder: (context, i) {
+                                    String text = "";
+                                    switch (i) {
+                                      case 0:
+                                        String btext =
+                                            snapshot.data.pressure.toString();
+                                        text = "Ciśnienie: $btext\hPa";
+                                        break;
+                                      case 1:
+                                        String btext =
+                                            snapshot.data.humidity.toString();
+                                        text = "Wilgotność: $btext\%";
+                                        break;
+                                      case 2:
+                                        String btext =
+                                            snapshot.data.pm25.toString();
+                                        text = "PM25: $btext\µg/m³";
+                                        break;
+                                      case 3:
+                                        String btext =
+                                            snapshot.data.pm10.toString();
+                                        text = "PM10: $btext\µg/m³";
+                                        break;
+                                      case 4:
+                                        String btext =
+                                            snapshot.data.pm1.toString();
+                                        text = "PM1: $btext\µg/m³";
+                                        break;
+                                    }
+                                    return Container(
+                                      height: 50.0,
+                                      padding: EdgeInsets.only(
+                                          right: 10.0, left: 10.0),
+                                      child: Center(
+                                        child: Text(
+                                          text,
+                                          style: TextStyle(),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                          Text(
-                            temptext,
-                            style: TextStyle(
-                              fontFamily: 'quicksand',
-                              color:
-                                  Theme.of(context).textTheme.headline5.color,
-                              fontSize: 80.0,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      height: 50.0,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 5,
-                        itemBuilder: (context, i) {
-                          String text = "";
-                          switch (i) {
-                            case 0:
-                              String btext = snapshot.data.pressure.toString();
-                              text = "Ciśnienie: $btext\hPa";
-                              break;
-                            case 1:
-                              String btext = snapshot.data.humidity.toString();
-                              text = "Wilgotność: $btext\%";
-                              break;
-                            case 2:
-                              String btext = snapshot.data.pm25.toString();
-                              text = "PM25: $btext\µg/m³";
-                              break;
-                            case 3:
-                              String btext = snapshot.data.pm10.toString();
-                              text = "PM10: $btext\µg/m³";
-                              break;
-                            case 4:
-                              String btext = snapshot.data.pm1.toString();
-                              text = "PM1: $btext\µg/m³";
-                              break;
-                          }
-                          return Container(
-                            height: 50.0,
-                            padding: EdgeInsets.only(right: 10.0, left: 10.0),
-                            child: Center(
-                              child: Text(
-                                text,
-                                style: TextStyle(),
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             );
