@@ -33,16 +33,21 @@ class _MainScreenState extends State<MainScreen> {
         if (snapshot.hasData) {
           if (snapshot.data.statusCode == 200) {
             String stime = snapshot.data.time;
-            String hour = (int.parse(stime.substring(
-                        stime.indexOf("T") + 1, stime.indexOf("T") + 3)) +
-                    2)
-                .toString();
+            int h = int.parse(stime.substring(
+                    stime.indexOf("T") + 1, stime.indexOf("T") + 3)) +
+                2;
             String minute =
                 stime.substring(stime.indexOf("T") + 4, stime.indexOf("T") + 6);
+            String hour = h >= 24 ? (h - 24).toString() : h.toString();
             String time = '$hour:$minute';
 
             int temp = snapshot.data.temperature;
             String temptext = temp.toString() + "°"; // temperature
+            Color hexToColor(String code) {
+              return new Color(
+                  int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+            }
+
             return Scaffold(
               backgroundColor: Theme.of(context).primaryColor,
               appBar: AppBar(
@@ -64,6 +69,17 @@ class _MainScreenState extends State<MainScreen> {
                 ],
                 centerTitle: true,
                 elevation: 0,
+                leading: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: hexToColor(snapshot.data.color),
+                    ),
+                    height: double.infinity,
+                    width: double.infinity,
+                  ),
+                ),
                 title: Text(
                   'Dane z $time',
                   style: TextStyle(
@@ -114,7 +130,10 @@ class _MainScreenState extends State<MainScreen> {
                                     Container(
                                       margin: EdgeInsets.only(bottom: 20.0),
                                       child: Text(
-                                        snapshot.data.advice,
+                                        snapshot.data.advice !=
+                                                snapshot.data.description
+                                            ? snapshot.data.advice
+                                            : '',
                                         style: TextStyle(
                                           fontSize: 15.0,
                                         ),
