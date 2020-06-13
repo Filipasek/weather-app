@@ -97,8 +97,15 @@ class _PickStationState extends State<PickStation> {
                       snapshot.data.stations[i].stationId.toString();
 
                   String city = snapshot.data.stations[i].address1 ?? '';
-                  String address = snapshot.data.stations[i].address2 ?? '';
-                  address = address != '' ? ', ' + address : ''; //TODO
+                  String street = snapshot.data.stations[i].address2 ?? '';
+                  String address;
+                  if (city != '' && street != '') {
+                    address = '$city, $street';
+                  }else if(city == ''){
+                    address = street;
+                  }else{
+                    address = city;
+                  }
                   return Container(
                     margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
                     height: 60.0,
@@ -122,7 +129,7 @@ class _PickStationState extends State<PickStation> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text("$city$address"),
+                          Text("$address"),
                           SizedBox(height: 5.0),
                           Text("$distance od Ciebie"),
                         ],
