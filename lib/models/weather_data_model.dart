@@ -53,7 +53,7 @@ class WeatherData {
       pm25: json['current']['values'][1]["value"],
       pm10: json['current']['values'][2]["value"],
       pressure: json['current']['values'][3]["value"].round(),
-      humidity: json['current']['values'][4]["value"].round(),
+      humidity: json['current']['values'][4]["value"].round() ?? '0',
       temperature: json['current']['values'][5]["value"].round(),
       time: json['current']['tillDateTime'],
       requestsLeft: headers['x-ratelimit-remaining-day'],

@@ -6,6 +6,7 @@ class MainScreen extends StatefulWidget {
   @override
   _MainScreenState createState() => _MainScreenState();
 }
+
 class MyBehavior extends ScrollBehavior {
   @override
   Widget buildViewportChrome(
@@ -13,6 +14,7 @@ class MyBehavior extends ScrollBehavior {
     return child;
   }
 }
+
 class _MainScreenState extends State<MainScreen> {
   Future weatherData;
   @override
@@ -214,37 +216,59 @@ class _MainScreenState extends State<MainScreen> {
                 elevation: 0,
               ),
               backgroundColor: Theme.of(context).primaryColor,
-              body: Container(
-                padding: EdgeInsets.all(20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Wystąpił błąd!\n",
-                        style: TextStyle(
-                          color: Theme.of(context).textTheme.headline5.color,
-                          fontSize: 20.0,
+              body: LayoutBuilder(
+                builder: (context, constraints) => RefreshIndicator(
+                  color: Colors.white,
+                  backgroundColor: Theme.of(context).accentColor,
+                  onRefresh: () async {
+                    setState(() {
+                      weatherData = getWeatherData();
+                    });
+                    return weatherData;
+                  },
+                  child: ScrollConfiguration(
+                    behavior: MyBehavior(),
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Container(
+                        height: constraints.maxHeight,
+                        padding: EdgeInsets.all(20.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                "Wystąpił błąd!\n",
+                                style: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .color,
+                                  fontSize: 20.0,
+                                ),
+                              ),
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Kod błędu: $code\n"),
+                            ),
+                            Container(
+                              alignment: Alignment.centerLeft,
+                              child: Text("Błąd: $message\n"),
+                            ),
+                            code == 401
+                                ? Container(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                        "Nieprawidłowy klucz API. Wejdź w ustawienia, aby zmienić na prawidłowy."),
+                                  )
+                                : SizedBox(),
+                          ],
                         ),
                       ),
                     ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Kod błędu: $code\n"),
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text("Błąd: $message\n"),
-                    ),
-                    code == 401
-                        ? Container(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                                "Nieprawidłowy klucz API. Wejdź w ustawienia, aby zmienić na prawidłowy."),
-                          )
-                        : SizedBox(),
-                  ],
+                  ),
                 ),
               ),
             );
