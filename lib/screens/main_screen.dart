@@ -166,30 +166,30 @@ class _MainScreenState extends State<MainScreen> {
                                       case 0:
                                         String btext =
                                             snapshot.data.pressure.toString();
-                                        text = "Ciśnienie: $btext\hPa";
+                                        text = btext != null ? "Ciśnienie: $btext\hPa" : null;
                                         break;
                                       case 1:
                                         String btext =
                                             snapshot.data.humidity.toString();
-                                        text = "Wilgotność: $btext\%";
+                                        text = btext != null ? "Wilgotność: $btext\%" : null;
                                         break;
                                       case 2:
                                         String btext =
                                             snapshot.data.pm25.toString();
-                                        text = "PM25: $btext\µg/m³";
+                                        text = btext != null ? "PM25: $btext\µg/m³" : null;
                                         break;
                                       case 3:
                                         String btext =
                                             snapshot.data.pm10.toString();
-                                        text = "PM10: $btext\µg/m³";
+                                        text = btext != null ? "PM10: $btext\µg/m³" : null;
                                         break;
                                       case 4:
                                         String btext =
                                             snapshot.data.pm1.toString();
-                                        text = "PM1: $btext\µg/m³";
+                                        text = btext != null ? "PM1: $btext\µg/m³" : null;
                                         break;
                                     }
-                                    return Container(
+                                    return text != null ? Container(
                                       height: 50.0,
                                       padding: EdgeInsets.only(
                                           right: 10.0, left: 10.0),
@@ -199,7 +199,7 @@ class _MainScreenState extends State<MainScreen> {
                                           style: TextStyle(),
                                         ),
                                       ),
-                                    );
+                                    ) : SizedBox(width: 0.0);
                                   },
                                 ),
                               ),
