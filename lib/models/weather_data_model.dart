@@ -41,7 +41,7 @@ class WeatherData {
   });
 
   factory WeatherData.fromJson(
-      Map<String, dynamic> json, Map<String, String> headers, int statusCode) {
+      Map<String, dynamic> json, Map<String, dynamic> headers, int statusCode) {
     return WeatherData(
       name: json['current']['indexes'][0]["name"],
       description: json['current']['indexes'][0]["description"],
