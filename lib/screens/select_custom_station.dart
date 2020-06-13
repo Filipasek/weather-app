@@ -44,6 +44,8 @@ class _PickStationState extends State<PickStation> {
     await Future.delayed(Duration(milliseconds: 200));
   }
 
+  bool extreme = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,9 +103,9 @@ class _PickStationState extends State<PickStation> {
                   String address;
                   if (city != '' && street != '') {
                     address = '$city, $street';
-                  }else if(city == ''){
+                  } else if (city == '') {
                     address = street;
-                  }else{
+                  } else {
                     address = city;
                   }
                   return Container(
@@ -147,10 +149,19 @@ class _PickStationState extends State<PickStation> {
                 children: <Widget>[
                   Container(
                     margin: EdgeInsets.fromLTRB(20.0, 5.0, 20.0, 60.0),
-                    child: Text(
-                      "Filtruj wyniki",
-                      style: TextStyle(
-                        fontSize: 30.0,
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          extreme = !extreme;
+                          _distance = 10;
+                          _number = 5;
+                        });
+                      },
+                      child: Text(
+                        "Filtruj wyniki",
+                        style: TextStyle(
+                          fontSize: 30.0,
+                        ),
                       ),
                     ),
                   ),
@@ -177,8 +188,8 @@ class _PickStationState extends State<PickStation> {
                     ),
                     child: Slider(
                       min: 1.0,
-                      max: 50.0,
-                      divisions: 49,
+                      max: extreme ? 1000.0 : 50.0,
+                      divisions: extreme ? 999 : 49,
                       value: _distance * 1.0,
                       label: '$_distance km od Ciebie',
                       onChanged: (newValue) {
@@ -212,8 +223,8 @@ class _PickStationState extends State<PickStation> {
                     ),
                     child: Slider(
                       min: 1.0,
-                      max: 50.0,
-                      divisions: 49,
+                      max: extreme ? 1000.0 : 50.0,
+                      divisions: extreme ? 999 : 49,
                       value: _number * 1.0,
                       label: _number == 1
                           ? '$_number wynik'
