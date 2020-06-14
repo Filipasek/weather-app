@@ -9,7 +9,6 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Pogoda',
@@ -35,6 +34,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
 class App extends StatefulWidget {
   @override
   _AppState createState() => _AppState();
@@ -52,19 +52,20 @@ class _AppState extends State<App> {
       ),
     );
     return FutureBuilder(
-        future: isLogged(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return snapshot.data;
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      );
+      future: isLogged(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return snapshot.data;
+        } else {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }
+
 Future<Widget> isLogged() async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String result = prefs.getString('apiKey');

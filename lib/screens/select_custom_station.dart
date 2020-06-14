@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/getters/get_stations_list.dart';
+import 'package:weather/main.dart';
 import 'package:weather/models/station_list_model.dart';
+import 'package:weather/screens/main_screen.dart';
 
 class PickStation extends StatefulWidget {
   @override
@@ -82,9 +84,14 @@ class _PickStationState extends State<PickStation> {
                       padding: EdgeInsets.all(5.0),
                       onPressed: () async {
                         await _removePickedStation();
-                        setState(() {
-                          selected = null;
-                        });
+                        // setState(() {
+                        //   selected = null;
+                        // });
+                        await Future.delayed(Duration(milliseconds: 200));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => MainScreen()),
+                        );
                       },
                       child: Center(
                         child: Text("Przywróć domyślne"),
