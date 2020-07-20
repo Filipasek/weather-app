@@ -8,10 +8,9 @@ import 'package:location/location.dart';
 Future getWeatherData() async {
   String urlReq;
   SharedPreferences prefs = await SharedPreferences.getInstance();
-
-  String stationId = prefs.getString('stationId');
+  List<String> stationInfo = prefs.getStringList('station');
   String _result = prefs.getString('apiKey');
-
+  String city;
   final String _apikey =
       _result.trim().replaceAll(new RegExp('[^\u0001-\u007F]'), '');
   if (_apikey == '0000TEST0000') {
@@ -21,11 +20,13 @@ Future getWeatherData() async {
         '{"x-ratelimit-remaining-minute": "49", "x-ratelimit-limit-minute": "50","x-ratelimit-remaining-day": "910","x-ratelimit-limit-day": "1000"}';
     final statusCode = 200;
     WeatherData weatherData = new WeatherData.fromJson(
-        json.decode(response), json.decode(headers), statusCode);
+        json.decode(response), json.decode(headers), statusCode, 'Warszawa');
     await Future.delayed(Duration(seconds: 2));
     return weatherData;
   } else {
-    if (stationId != null) {
+    if (stationInfo != null) {
+      String stationId = stationInfo[0];
+      city = stationInfo[1];
       urlReq =
           'https://airapi.airly.eu/v2/measurements/installation?installationId=$stationId';
     } else {
@@ -77,7 +78,7 @@ Future getWeatherData() async {
       }
 
       WeatherData weatherData = new WeatherData.fromJson(
-          decodedResponse, response.headers, response.statusCode);
+          decodedResponse, response.headers, response.statusCode, city);
       return weatherData;
     } else {
       ErrorData errorData = new ErrorData.fromJson(

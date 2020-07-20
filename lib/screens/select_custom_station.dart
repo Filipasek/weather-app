@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/getters/get_stations_list.dart';
-import 'package:weather/main.dart';
+// import 'package:weather/main.dart';
 import 'package:weather/models/station_list_model.dart';
 import 'package:weather/screens/main_screen.dart';
 
@@ -28,15 +28,19 @@ class _PickStationState extends State<PickStation> {
 
   _getPickedStation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String result = prefs.getString('stationId');
+    // String result = prefs.getString('stationId');
+    List<String> result = prefs.getStringList('station');
+
     setState(() {
-      selected = result;
+      selected = result == null ? '' : result[0] ?? '';
     });
   }
 
-  _savePickedStation({@required String stationId}) async {
+  _savePickedStation(
+      {@required String stationId, @required String city}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('stationId', stationId);
+    // await prefs.setString('stationId', stationId);
+    await prefs.setStringList('station', [stationId, city]);
     await Future.delayed(Duration(milliseconds: 200));
   }
 
@@ -129,7 +133,7 @@ class _PickStationState extends State<PickStation> {
                       padding: EdgeInsets.all(5.0),
                       onPressed: selected != stationId
                           ? () async {
-                              await _savePickedStation(stationId: stationId);
+                              await _savePickedStation(stationId: stationId, city: city);
                               setState(() {
                                 selected = stationId;
                               });
@@ -195,8 +199,8 @@ class _PickStationState extends State<PickStation> {
                     ),
                     child: Slider(
                       min: 1.0,
-                      max: extreme ? 1000.0 : 50.0,
-                      divisions: extreme ? 999 : 49,
+                      max: extreme ? 2010.0 : 50.0,
+                      divisions: 49,
                       value: _distance * 1.0,
                       label: '$_distance km od Ciebie',
                       onChanged: (newValue) {
@@ -230,8 +234,8 @@ class _PickStationState extends State<PickStation> {
                     ),
                     child: Slider(
                       min: 1.0,
-                      max: extreme ? 1000.0 : 50.0,
-                      divisions: extreme ? 999 : 49,
+                      max: extreme ? 2450.0 : 50.0,
+                      divisions: 49,
                       value: _number * 1.0,
                       label: _number == 1
                           ? '$_number wynik'

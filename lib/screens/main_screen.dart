@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather/getters/weather_data.dart';
 import 'package:weather/screens/settings_screen.dart';
+import 'package:weather/tools/config.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -40,6 +42,7 @@ class _MainScreenState extends State<MainScreen> {
                 stime.substring(stime.indexOf("T") + 4, stime.indexOf("T") + 6);
             String hour = h >= 24 ? (h - 24).toString() : h.toString();
             String time = '$hour:$minute';
+            String city = snapshot.data.city;
 
             int temp = snapshot.data.temperature;
             String temptext = temp.toString() + "°"; // temperature
@@ -69,7 +72,7 @@ class _MainScreenState extends State<MainScreen> {
                 ],
                 centerTitle: true,
                 elevation: 0,
-                leading: Padding(
+                leading: Provider.of<ConfigData>(context).weatherLight ? Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: Container(
                     decoration: BoxDecoration(
@@ -79,7 +82,7 @@ class _MainScreenState extends State<MainScreen> {
                     height: double.infinity,
                     width: double.infinity,
                   ),
-                ),
+                ) : null,
                 title: Text(
                   'Dane z $time',
                   style: TextStyle(
@@ -108,10 +111,37 @@ class _MainScreenState extends State<MainScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              SizedBox(),
+                              city != null
+                                  ? Center(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                            vertical: 4.0, horizontal: 12.0),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            width: 1.0,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyText2
+                                                .color,
+                                          ),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20.0)),
+                                        ),
+                                        child: Text(
+                                          city,
+                                          style: TextStyle(
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyText2
+                                                .color,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : SizedBox(),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
-                                    20.0, 10.0, 20.0, 10.0),
+                                    20.0, 10.0, 20.0, 20.0),
                                 child: Column(
                                   children: <Widget>[
                                     Container(
@@ -166,40 +196,52 @@ class _MainScreenState extends State<MainScreen> {
                                       case 0:
                                         String btext =
                                             snapshot.data.pressure.toString();
-                                        text = btext != null ? "Ciśnienie: $btext\hPa" : null;
+                                        text = btext != null
+                                            ? "Ciśnienie: $btext\hPa"
+                                            : null;
                                         break;
                                       case 1:
                                         String btext =
                                             snapshot.data.humidity.toString();
-                                        text = btext != null ? "Wilgotność: $btext\%" : null;
+                                        text = btext != null
+                                            ? "Wilgotność: $btext\%"
+                                            : null;
                                         break;
                                       case 2:
                                         String btext =
                                             snapshot.data.pm25.toString();
-                                        text = btext != null ? "PM25: $btext\µg/m³" : null;
+                                        text = btext != null
+                                            ? "PM25: $btext\µg/m³"
+                                            : null;
                                         break;
                                       case 3:
                                         String btext =
                                             snapshot.data.pm10.toString();
-                                        text = btext != null ? "PM10: $btext\µg/m³" : null;
+                                        text = btext != null
+                                            ? "PM10: $btext\µg/m³"
+                                            : null;
                                         break;
                                       case 4:
                                         String btext =
                                             snapshot.data.pm1.toString();
-                                        text = btext != null ? "PM1: $btext\µg/m³" : null;
+                                        text = btext != null
+                                            ? "PM1: $btext\µg/m³"
+                                            : null;
                                         break;
                                     }
-                                    return text != null ? Container(
-                                      height: 50.0,
-                                      padding: EdgeInsets.only(
-                                          right: 10.0, left: 10.0),
-                                      child: Center(
-                                        child: Text(
-                                          text,
-                                          style: TextStyle(),
-                                        ),
-                                      ),
-                                    ) : SizedBox(width: 0.0);
+                                    return text != null
+                                        ? Container(
+                                            height: 50.0,
+                                            padding: EdgeInsets.only(
+                                                right: 10.0, left: 10.0),
+                                            child: Center(
+                                              child: Text(
+                                                text,
+                                                style: TextStyle(),
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox(width: 0.0);
                                   },
                                 ),
                               ),
@@ -313,10 +355,16 @@ class _MainScreenState extends State<MainScreen> {
               elevation: 0,
             ),
             body: Center(
+              child: SizedBox(
+                width: 80.0,
+                height: 80.0,
                 child: CircularProgressIndicator(
-              valueColor:
-                  AlwaysStoppedAnimation<Color>(Color.fromRGBO(0, 191, 166, 1)),
-            )),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    Color.fromRGBO(0, 191, 166, 1),
+                  ),
+                ),
+              ),
+            ),
           );
         }
       },

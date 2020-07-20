@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:weather/screens/get_api_key.dart';
 import 'package:weather/screens/select_custom_station.dart';
+import 'package:weather/tools/config.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String requestsLeft;
@@ -15,6 +17,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool value = false;
+
   @override
   Widget build(BuildContext context) {
     String requests = widget.requestsLeft;
@@ -45,6 +49,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
             Container(
               padding: EdgeInsets.all(50.0),
               child: Image.asset('assets/credentials/airly.png'),
+            ),
+            Container(
+              margin: EdgeInsets.only(bottom: 20.0),
+              child: CheckboxListTile(
+                title: Text(
+                  'Kolorowy wskaźnik',
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.headline5.color,
+                  ),
+                ),
+                value: Provider.of<ConfigData>(context).weatherLight,
+                onChanged: (newValue) {
+                  Provider.of<ConfigData>(context, listen: false)
+                      .changeWeatherLightBoolean(newValue);
+                },
+              ),
             ),
             Container(
               margin: EdgeInsets.only(bottom: 20.0),
