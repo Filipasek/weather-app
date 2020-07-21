@@ -114,8 +114,7 @@ class _MainScreenState extends State<MainScreen> {
                               city != null
                                   ? Center(
                                       child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: 4.0, horizontal: 12.0),
+                                        padding: EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 3.0),
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 1.0,

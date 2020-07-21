@@ -30,7 +30,6 @@ class ConfigData extends ChangeNotifier {
     }
 
     List<String> configData = prefs.getStringList('configData') ?? notPresent();
-    // throw Exception();
     if (configData.length < templateConfig.length) {
       List<String> newArray = templateConfig;
 

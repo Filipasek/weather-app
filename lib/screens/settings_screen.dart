@@ -50,20 +50,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
               padding: EdgeInsets.all(50.0),
               child: Image.asset('assets/credentials/airly.png'),
             ),
-            Container(
-              margin: EdgeInsets.only(bottom: 20.0),
-              child: CheckboxListTile(
-                title: Text(
-                  'Kolorowy wskaźnik',
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.headline5.color,
+            Theme(
+              data: ThemeData(
+                unselectedWidgetColor:
+                    Theme.of(context).textTheme.headline5.color,
+              ),
+              child: Container(
+                margin: EdgeInsets.only(bottom: 20.0),
+                child: CheckboxListTile(
+                  activeColor: Theme.of(context).accentColor,
+                  checkColor: Colors.white,
+                  title: Text(
+                    'Kolorowy wskaźnik',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headline5.color,
+                    ),
                   ),
+                  value: Provider.of<ConfigData>(context).weatherLight,
+                  onChanged: (newValue) {
+                    Provider.of<ConfigData>(context, listen: false)
+                        .changeWeatherLightBoolean(newValue);
+                  },
                 ),
-                value: Provider.of<ConfigData>(context).weatherLight,
-                onChanged: (newValue) {
-                  Provider.of<ConfigData>(context, listen: false)
-                      .changeWeatherLightBoolean(newValue);
-                },
               ),
             ),
             Container(
