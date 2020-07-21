@@ -28,7 +28,6 @@ class _PickStationState extends State<PickStation> {
 
   _getPickedStation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // String result = prefs.getString('stationId');
     List<String> result = prefs.getStringList('station');
 
     setState(() {
@@ -39,14 +38,13 @@ class _PickStationState extends State<PickStation> {
   _savePickedStation(
       {@required String stationId, @required String city}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await prefs.setString('stationId', stationId);
     await prefs.setStringList('station', [stationId, city]);
     await Future.delayed(Duration(milliseconds: 200));
   }
 
   _removePickedStation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('stationId');
+    await prefs.remove('station');
     await Future.delayed(Duration(milliseconds: 200));
   }
 
