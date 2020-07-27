@@ -23,6 +23,9 @@ class WeatherData {
 
   final String city;
 
+  final List history;
+  final List forecast;
+
   WeatherData({
     this.name,
     this.description,
@@ -41,10 +44,15 @@ class WeatherData {
     this.requestsPerDay,
     this.statusCode,
     this.city,
+    this.history,
+    this.forecast,
   });
 
-  factory WeatherData.fromJson(
-      Map<String, dynamic> json, Map<String, dynamic> headers, int statusCode, String city) {
+  factory WeatherData.fromJson(Map<String, dynamic> json,
+      Map<String, dynamic> headers, int statusCode, String city) {
+    List getForecast(List forecast) {
+      return forecast;
+    }
     return WeatherData(
       name: json['current']['indexes'][0]["name"],
       description: json['current']['indexes'][0]["description"],
@@ -63,6 +71,8 @@ class WeatherData {
       requestsPerDay: headers['x-ratelimit-limit-day'],
       statusCode: statusCode,
       city: city,
+      history: json['history'],
+      forecast: getForecast(json['forecast']),
     );
   }
 }

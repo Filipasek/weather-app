@@ -74,6 +74,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
+            Theme(
+              data: ThemeData(
+                unselectedWidgetColor:
+                    Theme.of(context).textTheme.headline5.color,
+              ),
+              child: Container(
+                margin: EdgeInsets.only(bottom: 20.0),
+                child: CheckboxListTile(
+                  activeColor: Theme.of(context).accentColor,
+                  checkColor: Colors.white,
+                  title: Text(
+                    'Pokaż wykres',
+                    style: TextStyle(
+                      color: Theme.of(context).textTheme.headline5.color,
+                    ),
+                  ),
+                  value: Provider.of<ConfigData>(context).showChart,
+                  onChanged: (newValue) {
+                    Provider.of<ConfigData>(context, listen: false)
+                        .changeShowChartBoolean(newValue);
+                  },
+                ),
+              ),
+            ),
             Container(
               margin: EdgeInsets.only(bottom: 20.0),
               height: 50.0,

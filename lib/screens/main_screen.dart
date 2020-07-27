@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/getters/weather_data.dart';
+import 'package:weather/parts/chart.dart';
 import 'package:weather/screens/settings_screen.dart';
 import 'package:weather/tools/config.dart';
+// import 'package:charts_flutter/flutter.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -34,6 +36,8 @@ class _MainScreenState extends State<MainScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.statusCode == 200) {
+            // print("Forecast is: " + snapshot.data.forecast[0].toString());
+            // print("History is: " + snapshot.data.history[0].toString());
             String stime = snapshot.data.time;
             int h = int.parse(stime.substring(
                     stime.indexOf("T") + 1, stime.indexOf("T") + 3)) +
@@ -50,6 +54,7 @@ class _MainScreenState extends State<MainScreen> {
               return new Color(
                   int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
             }
+
 
             return Scaffold(
               backgroundColor: Theme.of(context).primaryColor,
@@ -72,17 +77,19 @@ class _MainScreenState extends State<MainScreen> {
                 ],
                 centerTitle: true,
                 elevation: 0,
-                leading: Provider.of<ConfigData>(context).weatherLight ? Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: hexToColor(snapshot.data.color),
-                    ),
-                    height: double.infinity,
-                    width: double.infinity,
-                  ),
-                ) : null,
+                leading: Provider.of<ConfigData>(context).weatherLight
+                    ? Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: hexToColor(snapshot.data.color),
+                          ),
+                          height: double.infinity,
+                          width: double.infinity,
+                        ),
+                      )
+                    : null,
                 title: Text(
                   'Dane z $time',
                   style: TextStyle(
@@ -114,7 +121,8 @@ class _MainScreenState extends State<MainScreen> {
                               city != null
                                   ? Center(
                                       child: Container(
-                                        padding: EdgeInsets.fromLTRB(12.0, 5.0, 12.0, 3.0),
+                                        padding: EdgeInsets.fromLTRB(
+                                            12.0, 5.0, 12.0, 3.0),
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 1.0,
@@ -139,8 +147,10 @@ class _MainScreenState extends State<MainScreen> {
                                     )
                                   : SizedBox(),
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20.0, 10.0, 20.0, 20.0),
+                                padding: Provider.of<ConfigData>(context).showChart
+                                    ? const EdgeInsets.fromLTRB(
+                                        20.0, 80.0, 20.0, 20.0)
+                                    : const EdgeInsets.all(20.0),
                                 child: Column(
                                   children: <Widget>[
                                     Container(
@@ -183,67 +193,77 @@ class _MainScreenState extends State<MainScreen> {
                                   ],
                                 ),
                               ),
-                              Container(
-                                alignment: Alignment.bottomCenter,
-                                height: 50.0,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 5,
-                                  itemBuilder: (context, i) {
-                                    String text = "";
-                                    switch (i) {
-                                      case 0:
-                                        String btext =
-                                            snapshot.data.pressure.toString();
-                                        text = btext != null
-                                            ? "Ciśnienie: $btext\hPa"
-                                            : null;
-                                        break;
-                                      case 1:
-                                        String btext =
-                                            snapshot.data.humidity.toString();
-                                        text = btext != null
-                                            ? "Wilgotność: $btext\%"
-                                            : null;
-                                        break;
-                                      case 2:
-                                        String btext =
-                                            snapshot.data.pm25.toString();
-                                        text = btext != null
-                                            ? "PM25: $btext\µg/m³"
-                                            : null;
-                                        break;
-                                      case 3:
-                                        String btext =
-                                            snapshot.data.pm10.toString();
-                                        text = btext != null
-                                            ? "PM10: $btext\µg/m³"
-                                            : null;
-                                        break;
-                                      case 4:
-                                        String btext =
-                                            snapshot.data.pm1.toString();
-                                        text = btext != null
-                                            ? "PM1: $btext\µg/m³"
-                                            : null;
-                                        break;
-                                    }
-                                    return text != null
-                                        ? Container(
-                                            height: 50.0,
-                                            padding: EdgeInsets.only(
-                                                right: 10.0, left: 10.0),
-                                            child: Center(
-                                              child: Text(
-                                                text,
-                                                style: TextStyle(),
-                                              ),
-                                            ),
-                                          )
-                                        : SizedBox(width: 0.0);
-                                  },
-                                ),
-                              ),
+                              Column(
+                                children: [
+                                  Provider.of<ConfigData>(context).showChart ? LineChartSample2(
+                                    chartData: snapshot.data.history +
+                                        snapshot.data.forecast,
+                                  ) : SizedBox(),
+                                  Container(
+                                    alignment: Alignment.bottomCenter,
+                                    height: 50.0,
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: 5,
+                                      itemBuilder: (context, i) {
+                                        String text = "";
+                                        switch (i) {
+                                          case 0:
+                                            String btext = snapshot
+                                                .data.pressure
+                                                .toString();
+                                            text = btext != null
+                                                ? "Ciśnienie: $btext\hPa"
+                                                : null;
+                                            break;
+                                          case 1:
+                                            String btext = snapshot
+                                                .data.humidity
+                                                .toString();
+                                            text = btext != null
+                                                ? "Wilgotność: $btext\%"
+                                                : null;
+                                            break;
+                                          case 2:
+                                            String btext =
+                                                snapshot.data.pm25.toString();
+                                            text = btext != null
+                                                ? "PM25: $btext\µg/m³"
+                                                : null;
+                                            break;
+                                          case 3:
+                                            String btext =
+                                                snapshot.data.pm10.toString();
+                                            text = btext != null
+                                                ? "PM10: $btext\µg/m³"
+                                                : null;
+                                            break;
+                                          case 4:
+                                            String btext =
+                                                snapshot.data.pm1.toString();
+                                            text = btext != null
+                                                ? "PM1: $btext\µg/m³"
+                                                : null;
+                                            break;
+                                        }
+                                        return text != null
+                                            ? Container(
+                                                height: 50.0,
+                                                padding: EdgeInsets.only(
+                                                    right: 10.0, left: 10.0),
+                                                child: Center(
+                                                  child: Text(
+                                                    text,
+                                                    style: TextStyle(),
+                                                  ),
+                                                ),
+                                              )
+                                            : SizedBox(width: 0.0);
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              )
                             ],
                           ),
                         ),

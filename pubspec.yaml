@@ -11,10 +11,10 @@ description: Pogoda jest aplikacją pozwalającą sprawdzić stan powietrza w Tw
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 0.3.2+1
+version: 1.2.0
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
   flutter:
@@ -26,6 +26,8 @@ dependencies:
   url_launcher: ^5.4.5
   geodesy: ^0.3.2
   provider: ^4.3.1
+  charts_flutter: ^0.9.0 #remove
+  fl_chart: ^0.11.0
 
 
   # The following adds the Cupertino Icons font to your application.

@@ -5,14 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ConfigData extends ChangeNotifier {
   /// Tells if the light indicating quality of the weather by color should be shown.
   bool weatherLight;
+  bool showChart;
   SharedPreferences prefs;
-  List<String> templateConfig = ['true', '0'];
+  List<String> templateConfig = ['true', '0', 'true'];
 
   /// 0 is white theme, 1 is dark theme
   int themeColor;
 
   void changeWeatherLightBoolean(newValue) {
     saveConfig(id: 0, newValue: newValue);
+    notifyListeners();
+  }
+  void changeShowChartBoolean(newValue) {
+    saveConfig(id: 2, newValue: newValue);
     notifyListeners();
   }
 
@@ -40,6 +45,7 @@ class ConfigData extends ChangeNotifier {
       configData = newArray;
     }
     weatherLight = configData[0] == 'false' ? false : true;
+    showChart = configData[2] == 'false' ? false : true;
     themeColor = int.parse(configData[1] ?? '0');
     notifyListeners();
   }
