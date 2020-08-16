@@ -32,7 +32,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             ),
             child: Padding(
               padding: const EdgeInsets.only(
-                  right: 20.0, left: 20.0, top: 10, bottom: 2),
+                  right: 0.0, left: 0.0, top: 10, bottom: 2),
               child: LineChart(
                 showAvg ? avgData() : mainData(),
               ),
@@ -105,7 +105,6 @@ class _LineChartSample2State extends State<LineChartSample2> {
                 fontWeight: FontWeight.normal,
                 fontSize: 14,
               );
-              print('Here: ' + touchedSpot.y.toString());
               return LineTooltipItem(
                   touchedSpot.y.toString() + '°C', textStyle);
             }).toList();

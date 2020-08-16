@@ -7,11 +7,9 @@ import 'package:weather/tools/config.dart';
 class SettingsScreen extends StatefulWidget {
   final String requestsLeft;
   final String totalRequests;
+  final bool isNotWorking;
 
-  SettingsScreen({
-    this.requestsLeft,
-    this.totalRequests,
-  });
+  SettingsScreen({this.requestsLeft, this.totalRequests, this.isNotWorking});
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
 }
@@ -23,6 +21,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     String requests = widget.requestsLeft;
     String total = widget.totalRequests;
+    bool isNotWorking = widget.isNotWorking ?? false;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
@@ -56,7 +55,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Theme.of(context).textTheme.headline5.color,
               ),
               child: Container(
-                margin: EdgeInsets.only(bottom: 20.0),
+                margin: EdgeInsets.only(bottom: 0.0),
                 child: CheckboxListTile(
                   activeColor: Theme.of(context).accentColor,
                   checkColor: Colors.white,
@@ -98,27 +97,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(bottom: 20.0),
-              height: 50.0,
-              width: double.infinity,
-              child: RaisedButton(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PickStation()),
-                  );
-                },
-                color: Color.fromRGBO(0, 191, 166, 1),
-                child: Text(
-                  "Zmień stację",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
+            isNotWorking
+                ? SizedBox()
+                : Container(
+                    margin: EdgeInsets.only(bottom: 20.0),
+                    height: 50.0,
+                    width: double.infinity,
+                    child: RaisedButton(
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => PickStation()),
+                        );
+                      },
+                      color: Color.fromRGBO(0, 191, 166, 1),
+                      child: Text(
+                        "Zmień stację",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
             Container(
               margin: EdgeInsets.only(bottom: 50.0),
               height: 50.0,

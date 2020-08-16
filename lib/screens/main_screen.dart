@@ -55,7 +55,6 @@ class _MainScreenState extends State<MainScreen> {
                   int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
             }
 
-
             return Scaffold(
               backgroundColor: Theme.of(context).primaryColor,
               appBar: AppBar(
@@ -89,7 +88,10 @@ class _MainScreenState extends State<MainScreen> {
                           width: double.infinity,
                         ),
                       )
-                    : null,
+                    : SizedBox(
+                        width: 0.0,
+                        height: 0.0,
+                      ),
                 title: Text(
                   'Dane z $time',
                   style: TextStyle(
@@ -147,10 +149,11 @@ class _MainScreenState extends State<MainScreen> {
                                     )
                                   : SizedBox(),
                               Padding(
-                                padding: Provider.of<ConfigData>(context).showChart
-                                    ? const EdgeInsets.fromLTRB(
-                                        20.0, 80.0, 20.0, 20.0)
-                                    : const EdgeInsets.all(20.0),
+                                padding:
+                                    Provider.of<ConfigData>(context).showChart
+                                        ? const EdgeInsets.fromLTRB(
+                                            20.0, 80.0, 20.0, 20.0)
+                                        : const EdgeInsets.all(20.0),
                                 child: Column(
                                   children: <Widget>[
                                     Container(
@@ -195,10 +198,14 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                               Column(
                                 children: [
-                                  Provider.of<ConfigData>(context).showChart ? LineChartSample2(
-                                    chartData: snapshot.data.history +
-                                        snapshot.data.forecast,
-                                  ) : SizedBox(),
+                                  Provider.of<ConfigData>(context).showChart &&
+                                          snapshot.data.history != null &&
+                                          snapshot.data.forecast != null
+                                      ? LineChartSample2(
+                                          chartData: snapshot.data.history +
+                                              snapshot.data.forecast,
+                                        )
+                                      : SizedBox(),
                                   Container(
                                     alignment: Alignment.bottomCenter,
                                     height: 50.0,
@@ -278,6 +285,10 @@ class _MainScreenState extends State<MainScreen> {
             String message = snapshot.data.errorMessage;
             return Scaffold(
               appBar: AppBar(
+                leading: SizedBox(
+                  width: 0.0,
+                  height: 0.0,
+                ),
                 actions: <Widget>[
                   IconButton(
                     icon: Icon(Icons.settings),
@@ -286,7 +297,9 @@ class _MainScreenState extends State<MainScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => SettingsScreen(),
+                          builder: (_) => SettingsScreen(
+                            isNotWorking: true,
+                          ),
                         ),
                       );
                     },
@@ -357,6 +370,10 @@ class _MainScreenState extends State<MainScreen> {
           return Scaffold(
             backgroundColor: Theme.of(context).primaryColor,
             appBar: AppBar(
+              leading: SizedBox(
+                width: 0.0,
+                height: 0.0,
+              ),
               actions: <Widget>[
                 IconButton(
                   icon: Icon(Icons.settings),
@@ -364,7 +381,9 @@ class _MainScreenState extends State<MainScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => SettingsScreen(),
+                        builder: (_) => SettingsScreen(
+                          isNotWorking: true,
+                        ),
                       ),
                     );
                   },

@@ -131,7 +131,8 @@ class _PickStationState extends State<PickStation> {
                       padding: EdgeInsets.all(5.0),
                       onPressed: selected != stationId
                           ? () async {
-                              await _savePickedStation(stationId: stationId, city: city);
+                              await _savePickedStation(
+                                  stationId: stationId, city: city);
                               setState(() {
                                 selected = stationId;
                               });
@@ -279,6 +280,37 @@ class _PickStationState extends State<PickStation> {
                             ),
                     ),
                   ),
+                  selected != '' ? Container(
+                    margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                    height: 60.0,
+                    child: RaisedButton(
+                      disabledColor: Theme.of(context).accentColor,
+                      disabledTextColor: Colors.black,
+                      textColor: Theme.of(context).textTheme.headline5.color,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15.0),
+                      ),
+                      color: Theme.of(context).primaryColor,
+                      padding: EdgeInsets.all(5.0),
+                      onPressed: () async {
+                        await _removePickedStation();
+                        // setState(() {
+                        //   selected = null;
+                        // });
+                        await Future.delayed(Duration(milliseconds: 200));
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => MainScreen()),
+                        );
+                      },
+                      child: Center(
+                        child: Text(
+                          "Usuń wybrane",
+                          style: TextStyle(fontSize: 17.0),
+                        ),
+                      ),
+                    ),
+                  ) : SizedBox(),
                 ],
               ),
             );
