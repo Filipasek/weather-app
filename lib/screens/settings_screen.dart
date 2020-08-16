@@ -16,9 +16,12 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool value = false;
-
+  bool showAlternativeColorsOnChart = false;
+  double height = 0.0;
   @override
   Widget build(BuildContext context) {
+    height = Provider.of<ConfigData>(context).showChart ? 50.0 : 0.0;
+    showAlternativeColorsOnChart = Provider.of<ConfigData>(context).showChart;
     String requests = widget.requestsLeft;
     String total = widget.totalRequests;
     bool isNotWorking = widget.isNotWorking ?? false;
@@ -42,106 +45,139 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: Container(
         padding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(50.0),
-              child: Image.asset('assets/credentials/airly.png'),
-            ),
-            Theme(
-              data: ThemeData(
-                unselectedWidgetColor:
-                    Theme.of(context).textTheme.headline5.color,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(50.0),
+                child: Image.asset('assets/credentials/airly.png'),
               ),
-              child: Container(
-                margin: EdgeInsets.only(bottom: 0.0),
-                child: CheckboxListTile(
-                  activeColor: Theme.of(context).accentColor,
-                  checkColor: Colors.white,
-                  title: Text(
-                    'Kolorowy wskaźnik',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headline5.color,
+              Theme(
+                data: ThemeData(
+                  unselectedWidgetColor:
+                      Theme.of(context).textTheme.headline5.color,
+                ),
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 0.0),
+                  child: CheckboxListTile(
+                    activeColor: Theme.of(context).accentColor,
+                    checkColor: Colors.white,
+                    title: Text(
+                      'Kolorowy wskaźnik',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline5.color,
+                      ),
                     ),
+                    value: Provider.of<ConfigData>(context).weatherLight,
+                    onChanged: (newValue) {
+                      Provider.of<ConfigData>(context, listen: false)
+                          .changeWeatherLightBoolean(newValue);
+                    },
                   ),
-                  value: Provider.of<ConfigData>(context).weatherLight,
-                  onChanged: (newValue) {
-                    Provider.of<ConfigData>(context, listen: false)
-                        .changeWeatherLightBoolean(newValue);
-                  },
                 ),
               ),
-            ),
-            Theme(
-              data: ThemeData(
-                unselectedWidgetColor:
-                    Theme.of(context).textTheme.headline5.color,
-              ),
-              child: Container(
-                margin: EdgeInsets.only(bottom: 20.0),
-                child: CheckboxListTile(
-                  activeColor: Theme.of(context).accentColor,
-                  checkColor: Colors.white,
-                  title: Text(
-                    'Pokaż wykres',
-                    style: TextStyle(
-                      color: Theme.of(context).textTheme.headline5.color,
+              Theme(
+                data: ThemeData(
+                  unselectedWidgetColor:
+                      Theme.of(context).textTheme.headline5.color,
+                ),
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 0.0),
+                  child: CheckboxListTile(
+                    activeColor: Theme.of(context).accentColor,
+                    checkColor: Colors.white,
+                    title: Text(
+                      'Pokaż wykres',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline5.color,
+                      ),
                     ),
+                    value: Provider.of<ConfigData>(context).showChart,
+                    onChanged: (newValue) {
+                      Provider.of<ConfigData>(context, listen: false)
+                          .changeShowChartBoolean(newValue);
+                      setState(() {
+                        height = newValue ? 50.0 : 0.0;
+                        showAlternativeColorsOnChart = newValue;
+                      });
+                    },
                   ),
-                  value: Provider.of<ConfigData>(context).showChart,
-                  onChanged: (newValue) {
-                    Provider.of<ConfigData>(context, listen: false)
-                        .changeShowChartBoolean(newValue);
-                  },
                 ),
               ),
-            ),
-            isNotWorking
-                ? SizedBox()
-                : Container(
-                    margin: EdgeInsets.only(bottom: 20.0),
-                    height: 50.0,
-                    width: double.infinity,
-                    child: RaisedButton(
-                      onPressed: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => PickStation()),
-                        );
-                      },
-                      color: Color.fromRGBO(0, 191, 166, 1),
-                      child: Text(
-                        "Zmień stację",
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.white,
+              Theme(
+                data: ThemeData(
+                  unselectedWidgetColor:
+                      Theme.of(context).textTheme.headline5.color,
+                ),
+                child: AnimatedContainer(
+                  
+                  duration: Duration(milliseconds: 150),
+                  height: height,
+                  margin: EdgeInsets.only(bottom: 0.0),
+                  child: showAlternativeColorsOnChart ? CheckboxListTile(
+                    activeColor: Theme.of(context).accentColor,
+                    checkColor: Colors.white,
+                    title: Text(
+                      'Alternatywne kolory wykresu',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline5.color,
+                      ),
+                    ),
+                    value: Provider.of<ConfigData>(context).showAlternativeColorsOnChart,
+                    onChanged: (newValue) {
+                      Provider.of<ConfigData>(context, listen: false)
+                          .changeShowAlternativeColorsOnChartBoolean(newValue);
+                    },
+                  ) : SizedBox(),
+                ),
+              ),
+              isNotWorking
+                  ? SizedBox()
+                  : Container(
+                      margin: EdgeInsets.only(bottom: 20.0, top: 20.0),
+                      height: 50.0,
+                      width: double.infinity,
+                      child: RaisedButton(
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (_) => PickStation()),
+                          );
+                        },
+                        color: Color.fromRGBO(0, 191, 166, 1),
+                        child: Text(
+                          "Zmień stację",
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-            Container(
-              margin: EdgeInsets.only(bottom: 50.0),
-              height: 50.0,
-              width: double.infinity,
-              child: RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => GetApiKey()),
-                  );
-                },
-                color: Color.fromRGBO(0, 191, 166, 1),
-                child: Text(
-                  "Zmień klucz API",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
+              Container(
+                margin: EdgeInsets.only(bottom: 20.0),
+                height: 50.0,
+                width: double.infinity,
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => GetApiKey()),
+                    );
+                  },
+                  color: Color.fromRGBO(0, 191, 166, 1),
+                  child: Text(
+                    "Zmień klucz API",
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

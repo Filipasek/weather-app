@@ -6,8 +6,9 @@ class ConfigData extends ChangeNotifier {
   /// Tells if the light indicating quality of the weather by color should be shown.
   bool weatherLight;
   bool showChart;
+  bool showAlternativeColorsOnChart;
   SharedPreferences prefs;
-  List<String> templateConfig = ['true', '0', 'true'];
+  List<String> templateConfig = ['true', '0', 'true', 'false'];
 
   /// 0 is white theme, 1 is dark theme
   int themeColor;
@@ -18,6 +19,10 @@ class ConfigData extends ChangeNotifier {
   }
   void changeShowChartBoolean(newValue) {
     saveConfig(id: 2, newValue: newValue);
+    notifyListeners();
+  }
+  void changeShowAlternativeColorsOnChartBoolean(newValue) {
+    saveConfig(id: 3, newValue: newValue);
     notifyListeners();
   }
 
@@ -46,6 +51,7 @@ class ConfigData extends ChangeNotifier {
     }
     weatherLight = configData[0] == 'false' ? false : true;
     showChart = configData[2] == 'false' ? false : true;
+    showAlternativeColorsOnChart = configData [3] == 'false' ? false : true;
     themeColor = int.parse(configData[1] ?? '0');
     notifyListeners();
   }
