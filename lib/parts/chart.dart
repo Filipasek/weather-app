@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/tools/config.dart';
 
-class LineChartSample2 extends StatefulWidget {
+class WeatherChart extends StatefulWidget {
   final chartData;
-  LineChartSample2({@required this.chartData});
+  final altColors;
+  WeatherChart({@required this.chartData, this.altColors});
   @override
-  _LineChartSample2State createState() => _LineChartSample2State();
+  _WeatherChartState createState() => _WeatherChartState();
 }
 
-class _LineChartSample2State extends State<LineChartSample2> {
+class _WeatherChartState extends State<WeatherChart> {
   List<Color> gradientColorsAlternative = [
     const Color.fromRGBO(122, 87, 209, 1),
     const Color.fromRGBO(243, 129, 129, 1),
@@ -29,8 +30,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
             padding: const EdgeInsets.only(
                 right: 10.0, left: 10.0, top: 10, bottom: 2),
             child: LineChart(
-              mainData(Provider.of<ConfigData>(context)
-                  .showAlternativeColorsOnChart),
+              mainData(widget.altColors),
             ),
           ),
         ),
@@ -39,6 +39,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
   }
 
   LineChartData mainData(bool alternativeColors) {
+    print('loaded');
     List<Color> gradientColorsBooleaned =
         alternativeColors ? gradientColorsAlternative : gradientColors;
     return LineChartData(
@@ -113,43 +114,11 @@ class _LineChartSample2State extends State<LineChartSample2> {
             } else {
               return '';
             }
-            // switch (value.toInt()) {
-            //   case 2:
-            //     return '-22h';
-            //   case 5:
-            //     return '-19h';
-            //   case 8:
-            //     return '-16h';
-            //   case 15:
-            //     return '-9h';
-            //   case 20:
-            //     return '-4h';
-            //   case 23:
-            //     return time(widget.chartData[23]['tillDateTime'].toString());
-            // }
           },
           margin: 5,
         ),
         leftTitles: SideTitles(
           showTitles: false,
-          textStyle: const TextStyle(
-            color: Color(0xff67727d),
-            fontWeight: FontWeight.bold,
-            fontSize: 15,
-          ),
-          getTitles: (value) {
-            switch (value.toInt()) {
-              case 1:
-                return '10k';
-              case 3:
-                return '30k';
-              case 5:
-                return '50k';
-            }
-            return '';
-          },
-          reservedSize: 28,
-          margin: 12,
         ),
       ),
       borderData: FlBorderData(

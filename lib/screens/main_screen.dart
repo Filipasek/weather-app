@@ -201,9 +201,12 @@ class _MainScreenState extends State<MainScreen> {
                                   Provider.of<ConfigData>(context).showChart &&
                                           snapshot.data.history != null &&
                                           snapshot.data.forecast != null
-                                      ? LineChartSample2(
+                                      ? WeatherChart(
                                           chartData: snapshot.data.history +
                                               snapshot.data.forecast,
+                                          altColors:
+                                              Provider.of<ConfigData>(context)
+                                                  .showAlternativeColorsOnChart,
                                         )
                                       : SizedBox(),
                                   Container(
