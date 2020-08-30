@@ -16,14 +16,17 @@ class ConfigData extends ChangeNotifier {
   void changeWeatherLightBoolean(newValue) {
     saveConfig(id: 0, newValue: newValue);
     notifyListeners();
+    readConfigs();
   }
   void changeShowChartBoolean(newValue) {
     saveConfig(id: 2, newValue: newValue);
     notifyListeners();
+    readConfigs();
   }
   void changeShowAlternativeColorsOnChartBoolean(newValue) {
     saveConfig(id: 3, newValue: newValue);
     notifyListeners();
+    readConfigs();
   }
 
   void saveConfig({@required id, @required newValue}) {
