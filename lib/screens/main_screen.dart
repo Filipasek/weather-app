@@ -298,7 +298,7 @@ class _MainScreenState extends State<MainScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (_) => SettingsScreen(
-                            isNotWorking: true,
+                            isNotWorking: code == 404 ? false : true,
                           ),
                         ),
                       );
