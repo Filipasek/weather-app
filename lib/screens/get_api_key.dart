@@ -57,13 +57,6 @@ class _GetApiKeyState extends State<GetApiKey> {
                       ),
                     ),
                   ),
-                  // Text(
-                  //   'Aby móc korzystać z tej aplikacji, musisz się zalogować.\n\nBy to zrobić, wejdź na stronę developer.airly.eu/docs klikając w przycisk "Przejdź do logowania" poniżej.\n\nZaloguj się, a następnie poszukaj napisu na ciemnym tle "Twój klucz API" bądź "Your API Key". Kliknij w niego, aby odsłonić klucz, który następnie skopiuj i wklej w tej aplikacji.',
-                  //   textAlign: TextAlign.justify,
-                  //   style: TextStyle(
-                  //     fontSize: 15.0,
-                  //   ),
-                  // ),
                   RichText(
                     textAlign: TextAlign.justify,
                     
