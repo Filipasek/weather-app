@@ -48,8 +48,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
-    print('Also very loaded, ugh!');
-
     Provider.of<ConfigData>(context, listen: false).readConfigs();
     
     SystemChrome.setSystemUIOverlayStyle(

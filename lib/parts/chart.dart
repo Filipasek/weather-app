@@ -39,7 +39,6 @@ class _WeatherChartState extends State<WeatherChart> {
   }
 
   LineChartData mainData(bool alternativeColors) {
-    print('loaded');
     List<Color> gradientColorsBooleaned =
         alternativeColors ? gradientColorsAlternative : gradientColors;
     return LineChartData(

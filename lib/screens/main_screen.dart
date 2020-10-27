@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/getters/weather_data.dart';
 import 'package:weather/parts/chart.dart';
 import 'package:weather/screens/settings_screen.dart';
 import 'package:weather/tools/config.dart';
-// import 'package:charts_flutter/flutter.dart';
+import 'package:intl/intl.dart';
 
 class MainScreen extends StatefulWidget {
   @override
@@ -21,6 +22,7 @@ class MyBehavior extends ScrollBehavior {
 
 class _MainScreenState extends State<MainScreen> {
   Future weatherData;
+
   @override
   void initState() {
     setState(() {
@@ -36,15 +38,10 @@ class _MainScreenState extends State<MainScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.statusCode == 200) {
-            // print("Forecast is: " + snapshot.data.forecast[0].toString());
-            // print("History is: " + snapshot.data.history[0].toString());
-            String stime = snapshot.data.time;
-            int h = int.parse(stime.substring(
-                    stime.indexOf("T") + 1, stime.indexOf("T") + 3)) +
-                2;
-            String minute =
-                stime.substring(stime.indexOf("T") + 4, stime.indexOf("T") + 6);
-            String hour = h >= 24 ? (h - 24).toString() : h.toString();
+            DateTime localTime = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(snapshot.data.time, true).toLocal();
+
+            String minute = localTime.minute.toString();
+            String hour = localTime.hour.toString();
             String time = '$hour:$minute';
             String city = snapshot.data.city;
 
