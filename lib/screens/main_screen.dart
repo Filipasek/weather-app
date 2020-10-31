@@ -39,8 +39,9 @@ class _MainScreenState extends State<MainScreen> {
         if (snapshot.hasData) {
           if (snapshot.data.statusCode == 200) {
             DateTime localTime = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(snapshot.data.time, true).toLocal();
-
-            String minute = localTime.minute.toString();
+            
+            String min = localTime.minute.toString();
+            String minute = min.length == 1 ? '0'+min : min;
             String hour = localTime.hour.toString();
             String time = '$hour:$minute';
             String city = snapshot.data.city;
