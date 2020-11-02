@@ -78,9 +78,7 @@ Future<Widget> isLogged() async {
   String result = prefs.getString('apiKey');
   if (result != null && result != '') {
     return MainScreen();
-    // return false;
   } else {
     return GetApiKey();
-    // return true;
   }
 }

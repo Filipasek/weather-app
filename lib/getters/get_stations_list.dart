@@ -49,7 +49,7 @@ Future<StationList> getStationsList(
       _result.trim().replaceAll(new RegExp('[^\u0001-\u007F]'), '');
 
   final String urlReq =
-      'https://airapi.airly.eu/v2/installations/nearest?lat=${_lat}&lng=${_lng}&maxDistanceKM=$distance&maxResults=$number';
+      'https://airapi.airly.eu/v2/installations/nearest?lat=$_lat&lng=$_lng&maxDistanceKM=$distance&maxResults=$number';
 
   final response = await http.get(urlReq, headers: {
     'Accept': 'application/json',

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:weather/getters/weather_data.dart';
 import 'package:weather/parts/chart.dart';

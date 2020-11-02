@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:weather/getters/get_stations_list.dart';
-// import 'package:weather/main.dart';
 import 'package:weather/models/station_list_model.dart';
-import 'package:weather/screens/main_screen.dart';
 import 'package:geocoder/geocoder.dart';
+import 'package:weather/screens/select_custom_station.dart';
 
 class SearchByCity extends StatefulWidget {
   @override
@@ -12,18 +10,12 @@ class SearchByCity extends StatefulWidget {
 }
 
 class _SearchByCityState extends State<SearchByCity> {
-  bool loading = false;
-  int _distance = 10;
-  int _number = 5;
 
   String selected;
   Future<StationList> stations;
   @override
   void initState() {
     _getPickedStation();
-    // setState(() {
-    //   stations = getStationsList();
-    // });
     super.initState();
   }
 
@@ -36,29 +28,23 @@ class _SearchByCityState extends State<SearchByCity> {
     });
   }
 
-  _savePickedStation(
-      {@required String stationId, @required String city}) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('station', [stationId, city]);
-    await Future.delayed(Duration(milliseconds: 200));
-  }
+  // _getGoogleAddress(address) async {
+  //   const _host = 'https://maps.google.com/maps/api/geocode/json';
+  //   const apiKey = '';
+  //   var encoded = Uri.encodeComponent(address);
+  //   final uri = Uri.parse('$_host?key=$apiKey&address=$encoded');
 
-  _removePickedStation() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('station');
-    await Future.delayed(Duration(milliseconds: 200));
-  }
+  //   http.Response response = await http.get(uri);
+  //   final responseJson = json.decode(response.body);
+  //   print(responseJson['results'][0]['geometry']['location']);
+  // }
 
-  Future<String> _searchForCity(String query) async {
-    // print('Query: ' + query);
-    // var addresses = await Geocoder.google('AIzaSyALdSj4uj_vcNPEHDGmXbcbD0aTI9uUX8U', language: 'PL').findAddressesFromQuery(query);
-    // var first = addresses.first;
-    // print("${first.featureName} : ${first.coordinates}");
-    // final query = "Wadowice";
-    var addresses = await Geocoder.local.findAddressesFromQuery(query);
-    var first = addresses.first;
+  Future<List<Address>> _searchForCity(String query) async {
+    List<Address> addresses =
+        await Geocoder.local.findAddressesFromQuery(query);
+    Address first = addresses.first;
     print("${first.featureName} : ${first.coordinates}");
-    return first.coordinates.toString();
+    return addresses;
   }
 
   bool extreme = false;
@@ -73,13 +59,14 @@ class _SearchByCityState extends State<SearchByCity> {
         elevation: 0.0,
         centerTitle: true,
         title: Text(
-          "Zmień stację pomiarową",
+          "Wyszukaj po adresie",
           style: TextStyle(
             fontSize: 16.0,
           ),
         ),
       ),
       body: Container(
+        height: double.infinity,
         child: Column(
           children: [
             Container(
@@ -118,7 +105,7 @@ class _SearchByCityState extends State<SearchByCity> {
                         ),
                         border: OutlineInputBorder(),
                       ),
-                      onSubmitted: (text) {
+                      onChanged: (text) {
                         setState(() {
                           searchQuery = text;
                         });
@@ -128,18 +115,67 @@ class _SearchByCityState extends State<SearchByCity> {
                 ),
               ),
             ),
-            searchQuery.length >= 3
-                ? FutureBuilder(
-                    future: _searchForCity(searchQuery),
-                    builder: (BuildContext context, AsyncSnapshot snapshot) {
-                      if (snapshot.hasData) {
-                        return Text(snapshot.data);
-                      } else {
-                        return Text('No data yet');
-                      }
-                    },
-                  )
-                : SizedBox(),
+            Expanded(
+              child: searchQuery.length >= 3
+                  ? FutureBuilder(
+                      future: _searchForCity(searchQuery),
+                      builder: (BuildContext context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          List<Address> addresses = snapshot.data;
+
+                          return ListView.builder(
+                            itemCount: addresses.length,
+                            itemBuilder: (BuildContext context, int i) {
+                              return Container(
+                                width: double.infinity,
+                                margin:
+                                    EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                                height: 120.0,
+                                child: RaisedButton(
+                                  disabledColor: Theme.of(context).accentColor,
+                                  disabledTextColor: Colors.black,
+                                  textColor: Theme.of(context)
+                                      .textTheme
+                                      .headline5
+                                      .color,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  color: Theme.of(context).primaryColor,
+                                  padding: EdgeInsets.all(5.0),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => PickStation(
+                                          lat:
+                                              addresses[i].coordinates.latitude,
+                                          lng: addresses[i]
+                                              .coordinates
+                                              .longitude,
+                                          cityName: addresses[i].addressLine,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: <Widget>[
+                                      Text(addresses[i].addressLine),
+                                      Text(addresses[i].adminArea),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          return Text('Niestety, nie mogliśmy nic znaleźć');
+                        }
+                      },
+                    )
+                  : Text('Podaj co najmniej 3 znaki'),
+            ),
           ],
         ),
       ),

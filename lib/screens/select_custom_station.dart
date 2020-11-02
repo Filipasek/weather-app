@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/getters/get_stations_list.dart';
-// import 'package:weather/main.dart';
 import 'package:weather/models/station_list_model.dart';
 import 'package:weather/screens/main_screen.dart';
 import 'package:weather/screens/searching_by_city.dart';
-import 'package:geocoder/geocoder.dart';
 
 class PickStation extends StatefulWidget {
+  double lat;
+  double lng;
+  String cityName;
+  PickStation({this.lat, this.lng, this.cityName});
+
   @override
   _PickStationState createState() => _PickStationState();
 }
@@ -18,30 +21,42 @@ class _PickStationState extends State<PickStation> {
   int _number = 5;
 
   String selected;
+  bool allowSaving = false;
   Future<StationList> stations;
   @override
   void initState() {
     _getPickedStation();
-    // setState(() {
-    //   stations = getStationsList();
-    // });
     super.initState();
   }
 
+  List<String> coordinates;
   _getPickedStation() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> result = prefs.getStringList('station');
+    coordinates = prefs.getStringList('coordinates');
 
     setState(() {
       selected = result == null ? '' : result[0] ?? '';
     });
   }
 
+  _savePickedCoordinates(var lat, var lng) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _removePickedStation();
+    await prefs.setStringList('coordinates', [lat.toString(), lng.toString()]);
+  }
+  _removePickedCoordinates() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('coordinates');
+  }
   _savePickedStation(
       {@required String stationId, @required String city}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setStringList('station', [stationId, city]);
     await Future.delayed(Duration(milliseconds: 200));
+    setState(() {
+      allowSaving = true;
+    });
   }
 
   _removePickedStation() async {
@@ -54,11 +69,27 @@ class _PickStationState extends State<PickStation> {
 
   @override
   Widget build(BuildContext context) {
+    bool isCitySelected =
+        widget.cityName != null && widget.lat != null && widget.lng != null;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
       appBar: AppBar(
         elevation: 0.0,
         centerTitle: true,
+        actions: [
+          allowSaving
+              ? IconButton(
+                  icon: Icon(Icons.done),
+                  color: Theme.of(context).textTheme.headline5.color,
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => MainScreen()),
+                    );
+                  },
+                )
+              : SizedBox(),
+        ],
         title: Text(
           "Zmień stację pomiarową",
           style: TextStyle(
@@ -168,9 +199,11 @@ class _PickStationState extends State<PickStation> {
                         });
                       },
                       child: Text(
-                        "Filtruj wyniki",
+                        isCitySelected
+                            ? "Filtruj wyniki dla: \n${widget.cityName}"
+                            : "Filtruj wyniki",
                         style: TextStyle(
-                          fontSize: 30.0,
+                          fontSize: isCitySelected ? 25.0 : 30.0,
                         ),
                       ),
                     ),
@@ -257,8 +290,17 @@ class _PickStationState extends State<PickStation> {
                         setState(() {
                           loading = true;
                           try {
-                            stations = getStationsList(
-                                distance: _distance, number: _number);
+                            stations = isCitySelected
+                                ? getStationsList(
+                                    distance: _distance,
+                                    number: _number,
+                                    lat: widget.lat,
+                                    lng: widget.lng,
+                                  )
+                                : getStationsList(
+                                    distance: _distance,
+                                    number: _number,
+                                  );
                           } catch (e) {
                             throw Exception(e);
                           }
@@ -280,54 +322,75 @@ class _PickStationState extends State<PickStation> {
                             ),
                     ),
                   ),
-                  selected != ''
-                      ? Container(
-                          margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                          height: 60.0,
-                          child: RaisedButton(
-                            disabledColor: Theme.of(context).accentColor,
-                            disabledTextColor: Colors.black,
-                            textColor:
-                                Theme.of(context).textTheme.headline5.color,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            padding: EdgeInsets.all(5.0),
-                            onPressed: () async {
-                              await _removePickedStation();
-                              // setState(() {
-                              //   selected = null;
-                              // });
-                              await Future.delayed(Duration(milliseconds: 200));
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => MainScreen()),
-                              );
-                            },
-                            child: Center(
-                              child: Text(
-                                "Usuń wybrane",
-                                style: TextStyle(fontSize: 17.0),
-                              ),
+                  isCitySelected
+                      ? FlatButton(
+                          onPressed: () {
+                            _savePickedCoordinates(widget.lat, widget.lng);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => MainScreen()),
+                            );
+                          },
+                          child: Text(
+                            'Użyj najbliższej instalacji',
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline5.color,
                             ),
                           ),
                         )
-                      : SizedBox(),
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => SearchByCity()),
-                      );
-                    },
-                    child: Text(
-                      'Wyszukaj po nazwie miasta',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.headline5.color,
-                      ),
-                    ),
-                  ),
+                      : selected != '' || coordinates != null
+                          ? Container(
+                              margin:
+                                  EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                              height: 60.0,
+                              child: RaisedButton(
+                                disabledColor: Theme.of(context).accentColor,
+                                disabledTextColor: Colors.black,
+                                textColor:
+                                    Theme.of(context).textTheme.headline5.color,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                color: Theme.of(context).primaryColor,
+                                padding: EdgeInsets.all(5.0),
+                                onPressed: () async {
+                                  await _removePickedStation();
+                                  await _removePickedCoordinates();
+                                  await Future.delayed(
+                                      Duration(milliseconds: 200));
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (_) => MainScreen()),
+                                  );
+                                },
+                                child: Center(
+                                  child: Text(
+                                    selected != '' ? "Usuń wybraną stację" : "Usuń wybraną lokację",
+                                    style: TextStyle(fontSize: 17.0),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                  isCitySelected
+                      ? SizedBox()
+                      : FlatButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (_) => SearchByCity()),
+                            );
+                          },
+                          child: Text(
+                            'Wyszukaj po Twoim adresie',
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.headline5.color,
+                            ),
+                          ),
+                        ),
                 ],
               ),
             );
