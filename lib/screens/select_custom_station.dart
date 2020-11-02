@@ -4,6 +4,8 @@ import 'package:weather/getters/get_stations_list.dart';
 // import 'package:weather/main.dart';
 import 'package:weather/models/station_list_model.dart';
 import 'package:weather/screens/main_screen.dart';
+import 'package:weather/screens/searching_by_city.dart';
+import 'package:geocoder/geocoder.dart';
 
 class PickStation extends StatefulWidget {
   @override
@@ -86,9 +88,7 @@ class _PickStationState extends State<PickStation> {
                       padding: EdgeInsets.all(5.0),
                       onPressed: () async {
                         await _removePickedStation();
-                        // setState(() {
-                        //   selected = null;
-                        // });
+
                         await Future.delayed(Duration(milliseconds: 200));
                         Navigator.pushReplacement(
                           context,
@@ -254,14 +254,14 @@ class _PickStationState extends State<PickStation> {
                     width: double.infinity,
                     child: RaisedButton(
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(builder: (_) => GetApiKey()),
-                        // );
                         setState(() {
                           loading = true;
-                          stations = getStationsList(
-                              distance: _distance, number: _number);
+                          try {
+                            stations = getStationsList(
+                                distance: _distance, number: _number);
+                          } catch (e) {
+                            throw Exception(e);
+                          }
                         });
                       },
                       color: Color.fromRGBO(0, 191, 166, 1),
@@ -280,37 +280,54 @@ class _PickStationState extends State<PickStation> {
                             ),
                     ),
                   ),
-                  selected != '' ? Container(
-                    margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
-                    height: 60.0,
-                    child: RaisedButton(
-                      disabledColor: Theme.of(context).accentColor,
-                      disabledTextColor: Colors.black,
-                      textColor: Theme.of(context).textTheme.headline5.color,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      color: Theme.of(context).primaryColor,
-                      padding: EdgeInsets.all(5.0),
-                      onPressed: () async {
-                        await _removePickedStation();
-                        // setState(() {
-                        //   selected = null;
-                        // });
-                        await Future.delayed(Duration(milliseconds: 200));
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (_) => MainScreen()),
-                        );
-                      },
-                      child: Center(
-                        child: Text(
-                          "Usuń wybrane",
-                          style: TextStyle(fontSize: 17.0),
-                        ),
+                  selected != ''
+                      ? Container(
+                          margin: EdgeInsets.fromLTRB(15.0, 10.0, 15.0, 10.0),
+                          height: 60.0,
+                          child: RaisedButton(
+                            disabledColor: Theme.of(context).accentColor,
+                            disabledTextColor: Colors.black,
+                            textColor:
+                                Theme.of(context).textTheme.headline5.color,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            color: Theme.of(context).primaryColor,
+                            padding: EdgeInsets.all(5.0),
+                            onPressed: () async {
+                              await _removePickedStation();
+                              // setState(() {
+                              //   selected = null;
+                              // });
+                              await Future.delayed(Duration(milliseconds: 200));
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (_) => MainScreen()),
+                              );
+                            },
+                            child: Center(
+                              child: Text(
+                                "Usuń wybrane",
+                                style: TextStyle(fontSize: 17.0),
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox(),
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => SearchByCity()),
+                      );
+                    },
+                    child: Text(
+                      'Wyszukaj po nazwie miasta',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.headline5.color,
                       ),
                     ),
-                  ) : SizedBox(),
+                  ),
                 ],
               ),
             );

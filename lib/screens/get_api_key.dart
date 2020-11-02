@@ -116,6 +116,7 @@ class _GetApiKeyState extends State<GetApiKey> {
                           primaryColor: Theme.of(context).accentColor,
                         ),
                         child: TextFormField(
+                          style: TextStyle(color: Theme.of(context).textTheme.headline5.color),
                           showCursor: false,
                           decoration: InputDecoration(
                             labelStyle: TextStyle(
