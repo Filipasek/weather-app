@@ -10,24 +10,6 @@ class SearchByCity extends StatefulWidget {
 }
 
 class _SearchByCityState extends State<SearchByCity> {
-
-  String selected;
-  Future<StationList> stations;
-  @override
-  void initState() {
-    _getPickedStation();
-    super.initState();
-  }
-
-  _getPickedStation() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String> result = prefs.getStringList('station');
-
-    setState(() {
-      selected = result == null ? '' : result[0] ?? '';
-    });
-  }
-
   // _getGoogleAddress(address) async {
   //   const _host = 'https://maps.google.com/maps/api/geocode/json';
   //   const apiKey = '';
@@ -40,11 +22,20 @@ class _SearchByCityState extends State<SearchByCity> {
   // }
 
   Future<List<Address>> _searchForCity(String query) async {
-    List<Address> addresses =
-        await Geocoder.local.findAddressesFromQuery(query);
-    Address first = addresses.first;
-    print("${first.featureName} : ${first.coordinates}");
-    return addresses;
+    try {
+      List<Address> addresses =
+          await Geocoder.local.findAddressesFromQuery(query);
+      Address first = addresses.first;
+      // print("${first.featureName} : ${first.coordinates}");
+      return addresses;
+    } catch (e) {
+      if (e.code == 'not_available')
+        return Future.error('Niestety, nie mogliśmy nic znaleźć');
+      else if (e.code == 'failed')
+        return Future.error('Ups, coś poszło nie tak! Spróbuj ponownie');
+      else
+        return Future.error(e.code);
+    }
   }
 
   bool extreme = false;
@@ -108,6 +99,7 @@ class _SearchByCityState extends State<SearchByCity> {
                       onChanged: (text) {
                         setState(() {
                           searchQuery = text;
+                          _searchForCity(searchQuery);
                         });
                       },
                     ),
@@ -115,15 +107,15 @@ class _SearchByCityState extends State<SearchByCity> {
                 ),
               ),
             ),
-            Expanded(
-              child: searchQuery.length >= 3
-                  ? FutureBuilder(
-                      future: _searchForCity(searchQuery),
-                      builder: (BuildContext context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          List<Address> addresses = snapshot.data;
+            searchQuery.length >= 3
+                ? FutureBuilder(
+                    future: _searchForCity(searchQuery),
+                    builder: (BuildContext context, AsyncSnapshot snapshot) {
+                      if (snapshot.hasData) {
+                        List<Address> addresses = snapshot.data;
 
-                          return ListView.builder(
+                        return Expanded(
+                          child: ListView.builder(
                             itemCount: addresses.length,
                             itemBuilder: (BuildContext context, int i) {
                               return Container(
@@ -159,7 +151,8 @@ class _SearchByCityState extends State<SearchByCity> {
                                     );
                                   },
                                   child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
                                     children: <Widget>[
                                       Text(addresses[i].addressLine),
                                       Text(addresses[i].adminArea),
@@ -168,14 +161,20 @@ class _SearchByCityState extends State<SearchByCity> {
                                 ),
                               );
                             },
-                          );
-                        } else {
-                          return Text('Niestety, nie mogliśmy nic znaleźć');
-                        }
-                      },
-                    )
-                  : Text('Podaj co najmniej 3 znaki'),
-            ),
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        // return Text('Niestety, nie mogliśmy nic znaleźć');
+                        return Text(snapshot.error);
+                      } else {
+                        return Container(
+                          height: 3.0,
+                          child: LinearProgressIndicator(),
+                        );
+                      }
+                    },
+                  )
+                : Text('Podaj co najmniej 3 znaki'),
           ],
         ),
       ),

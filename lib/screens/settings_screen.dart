@@ -64,7 +64,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeColor: Theme.of(context).accentColor,
                     checkColor: Colors.white,
                     title: Text(
-                      'Kolorowy wskaźnik',
+                      'Kolorowy wskaźnik jakości powietrza',
                       style: TextStyle(
                         color: Theme.of(context).textTheme.headline5.color,
                       ),
@@ -88,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeColor: Theme.of(context).accentColor,
                     checkColor: Colors.white,
                     title: Text(
-                      'Pokaż wykres',
+                      'Pokaż wykres temperatury z ostatnich 24 godzin',
                       style: TextStyle(
                         color: Theme.of(context).textTheme.headline5.color,
                       ),
@@ -119,7 +119,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeColor: Theme.of(context).accentColor,
                     checkColor: Colors.white,
                     title: Text(
-                      'Alternatywne kolory wykresu',
+                      'Alternatywne kolory na wykresie',
                       style: TextStyle(
                         color: Theme.of(context).textTheme.headline5.color,
                       ),

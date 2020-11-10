@@ -44,7 +44,7 @@ Future getWeatherData() async {
         if (!_serviceEnabled) {
           _serviceEnabled = await location.requestService();
           if (!_serviceEnabled) {
-            throw Exception("We're fucked up");
+            throw Exception("We've fucked up");
           }
         }
 
@@ -52,16 +52,18 @@ Future getWeatherData() async {
         if (_permissionGranted == PermissionStatus.denied) {
           _permissionGranted = await location.requestPermission();
           if (_permissionGranted != PermissionStatus.granted) {
-            throw Exception("We're fucked upopp");
+            throw Exception("We've fucked upopp");
+            //TODO: no location permission given
           }
         }
         _locationData = await location.getLocation();
 
         lat = _locationData.latitude.toString();
         lng = _locationData.longitude.toString();
-      }else{
+      } else {
         lat = customCoordinates[0];
         lng = customCoordinates[1];
+        city = customCoordinates[2];
       }
       urlReq =
           'https://airapi.airly.eu/v2/measurements/point?lat=$lat&lng=$lng';
@@ -84,12 +86,15 @@ Future getWeatherData() async {
     if (response.statusCode == 200) {
       Map<String, dynamic> decodedResponse = json.decode(response.body);
 
-      if (decodedResponse['current']['indexes'][0]['value'] == null &&
-          decodedResponse['current']['indexes'][0]['level'] == 'UNKNOWN') {
-        ErrorData errorData = new ErrorData(
-            statusCode: 404,
-            errorMessage:
-                "W Twojej okolicy nie ma jeszcze naszych sensorów. Wejdź w ustawienia i wybierz jeden z dostępnych niedaleko Ciebie.");
+      // if (decodedResponse['current']['indexes'][0]['value'] == null &&
+      //     decodedResponse['current']['indexes'][0]['level'] == 'UNKNOWN') {
+      if (decodedResponse['current']['values'].length == 0) {
+        String text =
+            decodedResponse['current']['indexes'][0]['description'] == null
+                ? 'Wystąpił nieznany błąd. Przepraszamy!'
+                : decodedResponse['current']['indexes'][0]['description'];
+        ErrorData errorData =
+            new ErrorData(statusCode: 404, errorMessage: text);
         return errorData;
       }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather/getters/weather_data.dart';
 import 'package:weather/parts/chart.dart';
 import 'package:weather/screens/settings_screen.dart';
@@ -19,8 +20,15 @@ class MyBehavior extends ScrollBehavior {
   }
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen>
+    with SingleTickerProviderStateMixin {
   Future weatherData;
+  bool toDelete = false;
+  deleteCustomStation() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('coordinates');
+    await prefs.remove('station');
+  }
 
   @override
   void initState() {
@@ -37,10 +45,12 @@ class _MainScreenState extends State<MainScreen> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           if (snapshot.data.statusCode == 200) {
-            DateTime localTime = DateFormat("yyyy-MM-ddTHH:mm:ss").parse(snapshot.data.time, true).toLocal();
-            
+            DateTime localTime = DateFormat("yyyy-MM-ddTHH:mm:ss")
+                .parse(snapshot.data.time, true)
+                .toLocal();
+
             String min = localTime.minute.toString();
-            String minute = min.length == 1 ? '0'+min : min;
+            String minute = min.length == 1 ? '0' + min : min;
             String hour = localTime.hour.toString();
             String time = '$hour:$minute';
             String city = snapshot.data.city;
@@ -119,27 +129,78 @@ class _MainScreenState extends State<MainScreen> {
                             children: <Widget>[
                               city != null
                                   ? Center(
-                                      child: Container(
-                                        padding: EdgeInsets.fromLTRB(
-                                            12.0, 5.0, 12.0, 3.0),
+                                      child: AnimatedContainer(
+                                        duration: Duration(milliseconds: 150),
+                                        margin: EdgeInsets.fromLTRB(
+                                            25.0, 0.0, 25.0, 0.0),
+                                        // padding: EdgeInsets.fromLTRB(
+                                        //     12.0, 5.0, 12.0, 3.0),
                                         decoration: BoxDecoration(
                                           border: Border.all(
                                             width: 1.0,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyText2
-                                                .color,
+                                            color: toDelete
+                                                ? Color.fromRGBO(244, 36, 72, 1)
+                                                : Theme.of(context)
+                                                    .textTheme
+                                                    .bodyText2
+                                                    .color,
                                           ),
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(20.0)),
                                         ),
-                                        child: Text(
-                                          city,
-                                          style: TextStyle(
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyText2
-                                                .color,
+                                        child: ButtonTheme(
+                                          materialTapTargetSize:
+                                              MaterialTapTargetSize.shrinkWrap,
+                                          minWidth: 0,
+                                          height: 0,
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(20.0)),
+                                            child: FlatButton(
+                                              padding: EdgeInsets.zero,
+                                              onPressed: () async {
+                                                if (toDelete) {
+                                                  await deleteCustomStation();
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (_) =>
+                                                            MainScreen()),
+                                                  );
+                                                } else {
+                                                  setState(() {
+                                                    toDelete = true;
+                                                  });
+                                                }
+                                                Future.delayed(
+                                                    Duration(seconds: 3), () {
+                                                  setState(() {
+                                                    toDelete = false;
+                                                  });
+                                                });
+                                              },
+                                              child: AnimatedSize(
+                                                vsync: this,
+                                                duration:
+                                                    Duration(milliseconds: 150),
+                                                child: Container(
+                                                  padding: EdgeInsets.fromLTRB(
+                                                      12.0, 5.0, 12.0, 3.0),
+                                                  child: Text(
+                                                    toDelete
+                                                        ? "Kliknij jeszcze raz aby usunąć"
+                                                        : city,
+                                                    style: TextStyle(
+                                                      color:
+                                                          Theme.of(context)
+                                                              .textTheme
+                                                              .bodyText2
+                                                              .color,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
                                           ),
                                         ),
                                       ),

@@ -40,18 +40,22 @@ class _PickStationState extends State<PickStation> {
     });
   }
 
-  _savePickedCoordinates(var lat, var lng) async {
+  _savePickedCoordinates(double lat, double lng, String name) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _removePickedStation();
-    await prefs.setStringList('coordinates', [lat.toString(), lng.toString()]);
+    await prefs
+        .setStringList('coordinates', [lat.toString(), lng.toString(), name]);
   }
+
   _removePickedCoordinates() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('coordinates');
   }
+
   _savePickedStation(
       {@required String stationId, @required String city}) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    _removePickedCoordinates();
     await prefs.setStringList('station', [stationId, city]);
     await Future.delayed(Duration(milliseconds: 200));
     setState(() {
@@ -325,7 +329,8 @@ class _PickStationState extends State<PickStation> {
                   isCitySelected
                       ? FlatButton(
                           onPressed: () {
-                            _savePickedCoordinates(widget.lat, widget.lng);
+                            _savePickedCoordinates(
+                                widget.lat, widget.lng, widget.cityName);
                             Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(builder: (_) => MainScreen()),
@@ -367,7 +372,9 @@ class _PickStationState extends State<PickStation> {
                                 },
                                 child: Center(
                                   child: Text(
-                                    selected != '' ? "Usuń wybraną stację" : "Usuń wybraną lokację",
+                                    selected != ''
+                                        ? "Usuń wybraną stację"
+                                        : "Usuń wybraną lokację",
                                     style: TextStyle(fontSize: 17.0),
                                   ),
                                 ),
